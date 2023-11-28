@@ -115,8 +115,40 @@ public class KbString
         return result;
     }
 
+    /// <summary>
+    /// Returns a <see cref="string"/> representing a subsequence of this <see cref="KbString"/> starting at the provided
+    /// index with the specified length.
+    /// </summary>
+    /// <param name="start">An <see cref="int"/> representing a zero-based index to begin the subsequence.</param>
+    /// <param name="length">An <see cref="int"/> representing the length of the subsequence.</param>
+    /// <returns>A <see cref="string"/> subsequence starting at the provided index of the provided length.</returns>
     public string Substring(int start, int length)
     {
-        throw new NotImplementedException();
+        if(start < 0 || this.characters.Length < start)
+        {
+            throw new ArgumentException(nameof(start));
+        }
+
+        if(length < 0 || this.characters.Length < length)
+        {
+            throw new ArgumentException(nameof(length));
+        }
+
+        int last = start + length;
+
+        if(this.characters.Length < last)
+        {
+            throw new ArgumentException(nameof(length));
+        }
+
+        int copyIndex = 0;
+        char[] result = new char[length];
+
+        for (int sourceIndex = start; sourceIndex < last; sourceIndex++)
+        {
+            result[copyIndex++] = this.characters[sourceIndex];
+        }
+
+        return new String(result);
     }
 }
