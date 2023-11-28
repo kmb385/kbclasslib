@@ -164,12 +164,14 @@ public class KbString
             throw new ArgumentException(nameof(delimiter));
         }
 
-        List<string> results = new();
+        List<string> tokens = new();
 
         int sourceIndex = 0;
-        int prevDelimiterIndex = 0;
+        int sourceLength = this.characters.Length;
+        int tokenizedSourceOffset = 0;
 
-        while (sourceIndex <= this.characters.Length - delimiter.Length)
+        // Only tokenize from tokens 0...N-1.
+        while (sourceIndex <= sourceLength - delimiter.Length)
         {
             if(delimiter != this.Substring(sourceIndex, delimiter.Length))
             {
@@ -178,29 +180,27 @@ public class KbString
             }
 
             // Compute length of token in the split.
-            int tokenLength = sourceIndex - prevDelimiterIndex;
+            int tokenLength = sourceIndex - tokenizedSourceOffset;
 
-            results.Add(tokenLength == 0
-                ? string.Empty // No characters prior to the last delimiter add empty string.
-                : this.Substring(prevDelimiterIndex, tokenLength)); // Copy all characters prior to the delimiter.
+            tokens.Add(tokenLength == 0
+                ? string.Empty // No characters prior to the last delimiter, add empty string.
+                : this.Substring(tokenizedSourceOffset, tokenLength)); // Copy all characters prior to the delimiter.
 
             // Advance sourceIndex past last delimiter match using non-zero based Length property.
             sourceIndex += delimiter.Length;
             // Position the index for the next copy. 
-            prevDelimiterIndex = sourceIndex;
+            tokenizedSourceOffset = sourceIndex;
         }
 
-        // Result collection is missing the last token.
-        if(prevDelimiterIndex <= this.characters.Length)
-        {
-            // Compute length of token in the split.
-            int tokenLength = this.characters.Length - prevDelimiterIndex;
+        // Handle final token, which is either a delimiter or a token.
 
-            results.Add(tokenLength == 0
-                ? string.Empty // No characters prior to the last delimiter add empty string.
-                : this.Substring(prevDelimiterIndex, tokenLength)); // Copy all characters prior to the delimiter.
-        }
+        // Compute length of final token.
+        int untokenizedSourceLength = sourceLength - tokenizedSourceOffset;
 
-        return results.ToArray();
+        tokens.Add(untokenizedSourceLength == 0
+            ? string.Empty // No characters prior to the last delimiter add empty string.
+            : this.Substring(tokenizedSourceOffset, untokenizedSourceLength)); // Copy all characters prior to the delimiter.
+
+        return tokens.ToArray();
     }
 }
