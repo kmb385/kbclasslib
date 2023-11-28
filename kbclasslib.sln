@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kbclasslib", "kbclasslib\kbclasslib.csproj", "{2A9C25E5-8ACE-4EE1-9540-622ED486D43C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KbClassLib", "kbclasslib\KbClassLib.csproj", "{2A9C25E5-8ACE-4EE1-9540-622ED486D43C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KbClassLibTests", "kbclasslib-tests\KbClassLibTests.csproj", "{B0A05ADE-C915-496B-8EB2-E078AF2773BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2A9C25E5-8ACE-4EE1-9540-622ED486D43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A9C25E5-8ACE-4EE1-9540-622ED486D43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A9C25E5-8ACE-4EE1-9540-622ED486D43C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0A05ADE-C915-496B-8EB2-E078AF2773BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0A05ADE-C915-496B-8EB2-E078AF2773BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0A05ADE-C915-496B-8EB2-E078AF2773BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0A05ADE-C915-496B-8EB2-E078AF2773BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
