@@ -166,8 +166,8 @@ public class KbString
 
         List<string> results = new();
 
-        int prevDelimiterIndex = 0;
         int sourceIndex = 0;
+        int prevDelimiterIndex = 0;
 
         while (sourceIndex <= this.characters.Length - delimiter.Length)
         {
@@ -199,7 +199,6 @@ public class KbString
             results.Add(tokenLength == 0
                 ? string.Empty // No characters prior to the last delimiter add empty string.
                 : this.Substring(prevDelimiterIndex, tokenLength)); // Copy all characters prior to the delimiter.
-            // results.Add(this.Substring(prevDelimiterIndex, this.characters.Length - prevDelimiterIndex));
         }
 
         return results.ToArray();

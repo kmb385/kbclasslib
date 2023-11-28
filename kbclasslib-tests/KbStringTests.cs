@@ -190,10 +190,15 @@ public class KbStringTests
     [DataRow("bat,", ",")]
     [DataRow("bat,bat", ",")]
     [DataRow("bat,,bat", ",")]
+    [DataRow(",bat,,bat,", ",")]
     [DataRow("bat,bat,", ",")]
     [DataRow(",bat,bat,", ",")]
     [DataRow("bat,cat,hat,rat", ",")]
     [DataRow("bat,cat,hat,rat,,", ",")]
+    [DataRow("bat||cat||hat||rat", "||")]
+    [DataRow("||bat||cat||hat||rat", "||")]
+    [DataRow("||bat||cat||hat||rat||", "||")]
+    [DataRow("||bat||||cat||||hat||||rat||", "||")]
     public void Split_Succeeds(string source, string delimiter)
     {
         KbString kbString = new KbString(source);
