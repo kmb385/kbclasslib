@@ -83,4 +83,24 @@ public class KbString
 
         return false;
     }
+
+    /// <summary>
+    /// Returns true when the provided <see cref="string"/> is present at the begining of this <see cref="KbString"/>.
+    /// </summary>
+    /// <param name="target">The target <see cref="String"/> to find a match for.</param>
+    /// <returns>A <see cref="bool"/> that is true when a match is found; Otherwise false.</returns>
+    public bool StartsWith(string target)
+    {   
+        if (string.IsNullOrWhiteSpace(target))
+        {
+            throw new ArgumentException(nameof(target));
+        }
+
+        if(this.characters.Length < target.Length)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
