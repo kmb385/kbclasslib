@@ -47,6 +47,16 @@ public class KbString
     /// <returns>Returns <see cref="bool"/> true when this <see cref="string"/> contains the provided target.</returns>
     public bool Contains(string target)
     {
+        if (string.IsNullOrWhiteSpace(target))
+        {
+            throw new ArgumentException(nameof(target));
+        }
+
+        if(target.Length > this.characters.Length)
+        {
+            return false;
+        }
+
         return false;
     }
 }
