@@ -114,4 +114,9 @@ public class KbString
 
         return result;
     }
+
+    public string Substring(int start, int length)
+    {
+        throw new NotImplementedException();
+    }
 }

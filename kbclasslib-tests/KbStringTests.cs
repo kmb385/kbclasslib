@@ -148,4 +148,35 @@ public class KbStringTests
         KbString kbString = new KbString(source);
         Assert.ThrowsException<ArgumentException>(() => kbString.StartsWith(target));
     }
+
+    /// <summary>
+    /// Tests for the Substring method implementation where a substring is successfully returned.
+    /// </summary>
+    [TestMethod]
+    [DataRow("cat", 0, 1, "c")]
+    [DataRow("cat", 0, 2, "ca")]
+    [DataRow("cat", 0, 3, "cat")]
+    [DataRow("cat", 2, 1, "t")]
+    [DataRow("cat", 1, 2, "at")]
+    [DataRow("catcher", 1, 6, "atcher")]
+    public void Substring_Succeeds(string source, int start, int length, string result)
+    {
+        KbString kbString = new KbString(source);
+        Assert.AreEqual(result, kbString.Substring(start, length));
+    }
+
+    /// <summary>
+    /// Tests for exceptional condition when substring is invoked with invalid parameters.
+    /// </summary>
+    [TestMethod]
+    [DataRow("cat",  4,  1, "c")]     // Start exceeds length
+    [DataRow("cat",  0,  4, "ca")]    // Length exceeds source length 
+    [DataRow("cat", -1,  3, "cat")]  // Negative start index
+    [DataRow("cat",  2, -1, "t")]    // Negative length
+    [DataRow("cat",  3,  2, "at")]    // Start + Length exceeds source length
+    public void Substring_InvalidParameters_Throw(string source, int start, int length, string result)
+    {
+        KbString kbString = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbString.Substring(start, length));
+    }
 }
