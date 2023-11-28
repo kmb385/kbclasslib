@@ -179,4 +179,32 @@ public class KbStringTests
         KbString kbString = new KbString(source);
         Assert.ThrowsException<ArgumentException>(() => kbString.Substring(start, length));
     }
+
+    /// <summary>
+    /// Tests for the index of method implementation where a substring is successfully returned.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bat", ",")]
+    [DataRow("bat,bat", ",")]
+    [DataRow("bat,,bat", ",")]
+    [DataRow("bat,bat,", ",")]
+    [DataRow(",bat,bat,", ",")]
+    [DataRow("bat,cat,hat,rat", ",")]
+    public void Split_Succeeds(string source, string delimiter)
+    {
+        KbString kbString = new KbString(source);
+        Assert.AreEqual(source, string.Join(delimiter, kbString.Split(delimiter)));
+    }
+
+    /// <summary>
+    /// Tests for the index of method implementation where a substring is successfully returned.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bat", "")]
+    [DataRow("bat", null)]
+    public void Split_InvalidParameters_Throw(string source, string delimiter)
+    {
+        KbString kbString = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbString.Split(delimiter));
+    }
 }

@@ -151,4 +151,16 @@ public class KbString
 
         return new String(result);
     }
+
+    /// <summary>
+    /// Returns an <see cref="Array"/> of <see cref="string"/>s that appear around or between the delimeter.
+    /// </summary>
+    /// <param name="delimiter">A delimiter to split this <see cref="KbString"/> around.</param>
+    /// <returns>An <see cref="Array"/> of <see cref="string"/>.</returns>
+    public string[] Split(string delimiter)
+    {
+
+
+        return new string[] { };
+    }
 }
