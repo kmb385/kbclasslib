@@ -169,11 +169,12 @@ public class KbStringTests
     /// Tests for exceptional condition when substring is invoked with invalid parameters.
     /// </summary>
     [TestMethod]
-    [DataRow("cat",  4,  1, "c")]     // Start exceeds length
-    [DataRow("cat",  0,  4, "ca")]    // Length exceeds source length 
+    [DataRow("cat",  4,  1, "c")]    // Start exceeds length
+    [DataRow("cat",  0,  4, "ca")]   // Length exceeds source length 
     [DataRow("cat", -1,  3, "cat")]  // Negative start index
     [DataRow("cat",  2, -1, "t")]    // Negative length
-    [DataRow("cat",  3,  2, "at")]    // Start + Length exceeds source length
+    [DataRow("cat",  3,  2, "at")]   // Start + Length exceeds source length
+    [DataRow("cat",  0,  0, "")]     // Length is 0 
     public void Substring_InvalidParameters_Throw(string source, int start, int length, string result)
     {
         KbString kbString = new KbString(source);
@@ -185,15 +186,25 @@ public class KbStringTests
     /// </summary>
     [TestMethod]
     [DataRow("bat", ",")]
+    [DataRow(",bat", ",")]
+    [DataRow("bat,", ",")]
     [DataRow("bat,bat", ",")]
     [DataRow("bat,,bat", ",")]
     [DataRow("bat,bat,", ",")]
     [DataRow(",bat,bat,", ",")]
     [DataRow("bat,cat,hat,rat", ",")]
+    [DataRow("bat,cat,hat,rat,,", ",")]
     public void Split_Succeeds(string source, string delimiter)
     {
         KbString kbString = new KbString(source);
-        Assert.AreEqual(source, string.Join(delimiter, kbString.Split(delimiter)));
+        string[] tokens = kbString.Split(delimiter);
+        string[] expectedTokens = source.Split(delimiter);
+        Assert.AreEqual(expectedTokens.Length, tokens.Length);
+
+        for (int tokenIndex = 0; tokenIndex < tokens.Length; tokenIndex++)
+        {
+            Assert.AreEqual(expectedTokens[tokenIndex], tokens[tokenIndex]);
+        }
     }
 
     /// <summary>

@@ -32,7 +32,7 @@ public class KbString
     /// <exception cref="ArgumentException">Thrown when characters is null or empty.
     public KbString(char[] characters)
     {
-        if(characters == null || characters.Length == 0)
+        if (characters == null || characters.Length == 0)
         {
             throw new ArgumentException(nameof(characters));
         }
@@ -52,7 +52,7 @@ public class KbString
             throw new ArgumentException(nameof(target));
         }
 
-        if(target.Length > this.characters.Length)
+        if (target.Length > this.characters.Length)
         {
             return false;
         }
@@ -74,7 +74,7 @@ public class KbString
                     break;
                 }
 
-                if(targetIndex == target.Length - 1)
+                if (targetIndex == target.Length - 1)
                 {
                     return true;
                 }
@@ -90,13 +90,13 @@ public class KbString
     /// <param name="target">The target <see cref="String"/> to find a match for.</param>
     /// <returns>A <see cref="bool"/> that is true when a match is found; Otherwise false.</returns>
     public bool StartsWith(string target)
-    {   
+    {
         if (string.IsNullOrWhiteSpace(target))
         {
             throw new ArgumentException(nameof(target));
         }
 
-        if(this.characters.Length < target.Length)
+        if (this.characters.Length < target.Length)
         {
             return false;
         }
@@ -124,19 +124,19 @@ public class KbString
     /// <returns>A <see cref="string"/> subsequence starting at the provided index of the provided length.</returns>
     public string Substring(int start, int length)
     {
-        if(start < 0 || this.characters.Length < start)
+        if (start < 0 || this.characters.Length < start)
         {
             throw new ArgumentException(nameof(start));
         }
 
-        if(length < 0 || this.characters.Length < length)
+        if (length <= 0 || this.characters.Length < length)
         {
             throw new ArgumentException(nameof(length));
         }
 
         int last = start + length;
 
-        if(this.characters.Length < last)
+        if (this.characters.Length < last)
         {
             throw new ArgumentException(nameof(length));
         }
@@ -159,8 +159,49 @@ public class KbString
     /// <returns>An <see cref="Array"/> of <see cref="string"/>.</returns>
     public string[] Split(string delimiter)
     {
+        if (string.IsNullOrWhiteSpace(delimiter))
+        {
+            throw new ArgumentException(nameof(delimiter));
+        }
 
+        List<string> results = new();
 
-        return new string[] { };
+        int prevDelimiterIndex = 0;
+        int sourceIndex = 0;
+
+        while (sourceIndex <= this.characters.Length - delimiter.Length)
+        {
+            if(delimiter != this.Substring(sourceIndex, delimiter.Length))
+            {
+                sourceIndex++;
+                continue;
+            }
+
+            // Compute length of token in the split.
+            int tokenLength = sourceIndex - prevDelimiterIndex;
+
+            results.Add(tokenLength == 0
+                ? string.Empty // No characters prior to the last delimiter add empty string.
+                : this.Substring(prevDelimiterIndex, tokenLength)); // Copy all characters prior to the delimiter.
+
+            // Advance sourceIndex past last delimiter match using non-zero based Length property.
+            sourceIndex += delimiter.Length;
+            // Position the index for the next copy. 
+            prevDelimiterIndex = sourceIndex;
+        }
+
+        // Result collection is missing the last token.
+        if(prevDelimiterIndex <= this.characters.Length)
+        {
+            // Compute length of token in the split.
+            int tokenLength = this.characters.Length - prevDelimiterIndex;
+
+            results.Add(tokenLength == 0
+                ? string.Empty // No characters prior to the last delimiter add empty string.
+                : this.Substring(prevDelimiterIndex, tokenLength)); // Copy all characters prior to the delimiter.
+            // results.Add(this.Substring(prevDelimiterIndex, this.characters.Length - prevDelimiterIndex));
+        }
+
+        return results.ToArray();
     }
 }
