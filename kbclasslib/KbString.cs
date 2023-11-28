@@ -101,6 +101,17 @@ public class KbString
             return false;
         }
 
-        return true;
+        bool result = true;
+
+        for (int targetIndex = 0; targetIndex < target.Length; targetIndex++)
+        {
+            if (this.characters[targetIndex] != target[targetIndex])
+            {
+                result = false;
+                break;
+            }
+        }
+
+        return result;
     }
 }
