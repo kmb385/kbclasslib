@@ -105,4 +105,47 @@ public class KbStringTests
         Assert.ThrowsException<ArgumentException>(() => kbString.Contains(target));
     }
 
+    /// <summary>
+    /// Tests for the StartsWith method implementation where a match is found.
+    /// </summary>
+    [TestMethod]
+    [DataRow("cat","c")]
+    [DataRow("cat","ca")]
+    [DataRow("cat","cat")]
+    [DataRow(" catch"," ca")]
+    [DataRow("lucky bengal cat","lucky bengal")]
+    public void StartsWith_Match_Succeeds(string source, string target)
+    {
+        KbString kbString = new KbString(source);
+        Assert.IsTrue(kbString.StartsWith(target));
+    }
+
+    /// <summary>
+    /// Tests for the StartsWith method implementation where a match is not found.
+    /// </summary>
+    [TestMethod]
+    [DataRow("cat","b")]
+    [DataRow("cat","bat")]
+    [DataRow("cat","ate")]
+    [DataRow("cat","cater")]
+    [DataRow("chat","ouch")]
+    [DataRow(" chat","ouch")]
+    [DataRow("chat"," ouch")]
+    public void StartsWith_NoMatch_Succeeds(string source, string target)
+    {
+        KbString kbString = new KbString(source);
+        Assert.IsFalse(kbString.StartsWith(target));
+    }
+
+    /// <summary>
+    /// Tests for exceptional condition when target is null or empty.
+    /// </summary>
+    [TestMethod]
+    [DataRow("value","")]
+    [DataRow("value",null)]
+    public void StartsWith_EmptyAssertions_Throw(string source, string target)
+    {
+        KbString kbString = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbString.StartsWith(target));
+    }
 }
