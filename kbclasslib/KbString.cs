@@ -57,6 +57,30 @@ public class KbString
             return false;
         }
 
+        int firstCharacter = 0;
+
+        for (int sourceOffset = 0; sourceOffset < this.characters.Length; sourceOffset++)
+        {
+            if (this.characters[sourceOffset] != target[firstCharacter])
+            {
+                continue;
+            }
+
+            for (int targetIndex = firstCharacter; targetIndex < target.Length; targetIndex++)
+            {
+                int matchIndex = sourceOffset + targetIndex;
+                if (matchIndex >= this.characters.Length || this.characters[matchIndex] != target[targetIndex])
+                {
+                    break;
+                }
+
+                if(targetIndex == target.Length - 1)
+                {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 }
