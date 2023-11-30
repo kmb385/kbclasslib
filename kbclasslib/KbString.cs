@@ -47,41 +47,7 @@ public class KbString
     /// <returns>Returns <see cref="bool"/> true when this <see cref="string"/> contains the provided target.</returns>
     public bool Contains(string target)
     {
-        if (string.IsNullOrWhiteSpace(target))
-        {
-            throw new ArgumentException(nameof(target));
-        }
-
-        if (target.Length > this.characters.Length)
-        {
-            return false;
-        }
-
-        int firstCharacter = 0;
-
-        for (int sourceOffset = 0; sourceOffset < this.characters.Length; sourceOffset++)
-        {
-            if (this.characters[sourceOffset] != target[firstCharacter])
-            {
-                continue;
-            }
-
-            for (int targetIndex = firstCharacter; targetIndex < target.Length; targetIndex++)
-            {
-                int matchIndex = sourceOffset + targetIndex;
-                if (matchIndex >= this.characters.Length || this.characters[matchIndex] != target[targetIndex])
-                {
-                    break;
-                }
-
-                if (targetIndex == target.Length - 1)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return this.IndexOf(target, 0) != -1;
     }
 
     /// <summary>
@@ -91,28 +57,7 @@ public class KbString
     /// <returns>A <see cref="bool"/> that is true when a match is found; Otherwise false.</returns>
     public bool StartsWith(string target)
     {
-        if (string.IsNullOrWhiteSpace(target))
-        {
-            throw new ArgumentException(nameof(target));
-        }
-
-        if (this.characters.Length < target.Length)
-        {
-            return false;
-        }
-
-        bool result = true;
-
-        for (int targetIndex = 0; targetIndex < target.Length; targetIndex++)
-        {
-            if (this.characters[targetIndex] != target[targetIndex])
-            {
-                result = false;
-                break;
-            }
-        }
-
-        return result;
+        return this.IndexOf(target, 0) == 0;
     }
 
     /// <summary>
