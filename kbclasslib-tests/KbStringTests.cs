@@ -74,8 +74,8 @@ public class KbStringTests
     [DataRow("lucky bengal cat","l c")]
     public void Contains_Match_Succeeds(string source, string target)
     {
-        KbString kbString = new KbString(source);
-        Assert.IsTrue(kbString.Contains(target));
+        KbString kbSource = new KbString(source);
+        Assert.IsTrue(kbSource.Contains(target));
     }
 
     /// <summary>
@@ -89,8 +89,8 @@ public class KbStringTests
     [DataRow("chat","ouch")]
     public void Contains_NoMatch_Succeeds(string source, string target)
     {
-        KbString kbString = new KbString(source);
-        Assert.IsFalse(kbString.Contains(target));
+        KbString kbSource = new KbString(source);
+        Assert.IsFalse(kbSource.Contains(target));
     }
 
     /// <summary>
@@ -101,8 +101,8 @@ public class KbStringTests
     [DataRow("value",null)]
     public void Contains_EmptyAssertions_Throw(string source, string target)
     {
-        KbString kbString = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbString.Contains(target));
+        KbString kbSource = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbSource.Contains(target));
     }
 
     /// <summary>
@@ -116,8 +116,8 @@ public class KbStringTests
     [DataRow("lucky bengal cat","lucky bengal")]
     public void StartsWith_Match_Succeeds(string source, string target)
     {
-        KbString kbString = new KbString(source);
-        Assert.IsTrue(kbString.StartsWith(target));
+        KbString kbSource = new KbString(source);
+        Assert.IsTrue(kbSource.StartsWith(target));
     }
 
     /// <summary>
@@ -133,8 +133,8 @@ public class KbStringTests
     [DataRow("chat"," ouch")]
     public void StartsWith_NoMatch_Succeeds(string source, string target)
     {
-        KbString kbString = new KbString(source);
-        Assert.IsFalse(kbString.StartsWith(target));
+        KbString kbSource = new KbString(source);
+        Assert.IsFalse(kbSource.StartsWith(target));
     }
 
     /// <summary>
@@ -145,8 +145,8 @@ public class KbStringTests
     [DataRow("value",null)]
     public void StartsWith_EmptyAssertions_Throw(string source, string target)
     {
-        KbString kbString = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbString.StartsWith(target));
+        KbString kbSource = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbSource.StartsWith(target));
     }
 
     /// <summary>
@@ -161,8 +161,8 @@ public class KbStringTests
     [DataRow("catcher", 1, 6, "atcher")]
     public void Substring_Succeeds(string source, int start, int length, string result)
     {
-        KbString kbString = new KbString(source);
-        Assert.AreEqual(result, kbString.Substring(start, length));
+        KbString kbSource = new KbString(source);
+        Assert.AreEqual(result, kbSource.Substring(start, length));
     }
 
     /// <summary>
@@ -177,12 +177,12 @@ public class KbStringTests
     [DataRow("cat",  0,  0, "")]     // Length is 0 
     public void Substring_InvalidParameters_Throw(string source, int start, int length, string result)
     {
-        KbString kbString = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbString.Substring(start, length));
+        KbString kbSource = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbSource.Substring(start, length));
     }
 
     /// <summary>
-    /// Tests for the index of method implementation where a substring is successfully returned.
+    /// Tests for the split method implementation where an array of tokens is successfully returned.
     /// </summary>
     [TestMethod]
     [DataRow("bat", ",")]
@@ -201,8 +201,8 @@ public class KbStringTests
     [DataRow("||bat||||cat||||hat||||rat||", "||")]
     public void Split_Succeeds(string source, string delimiter)
     {
-        KbString kbString = new KbString(source);
-        string[] tokens = kbString.Split(delimiter);
+        KbString kbSource = new KbString(source);
+        string[] tokens = kbSource.Split(delimiter);
         string[] expectedTokens = source.Split(delimiter);
         Assert.AreEqual(expectedTokens.Length, tokens.Length);
 
@@ -213,14 +213,41 @@ public class KbStringTests
     }
 
     /// <summary>
-    /// Tests for the index of method implementation where a substring is successfully returned.
+    /// Tests for the split method implementation where an exceptional condition is encountered.
     /// </summary>
     [TestMethod]
     [DataRow("bat", "")]
     [DataRow("bat", null)]
     public void Split_InvalidParameters_Throw(string source, string delimiter)
     {
-        KbString kbString = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbString.Split(delimiter));
+        KbString kbSource = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbSource.Split(delimiter));
     }
+
+    /// <summary>
+    /// Tests for the indexOf method implementation where the index is successfully returned.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bat", "b", 0)]
+    [DataRow("bat", "a", 1)]
+    [DataRow("bat", "t", 2)]
+    [DataRow("bat", "x", -1)]
+    public void IndexOf_Succeeds(string source, string token, int expectedIndex)
+    {
+        KbString kbSource = new KbString(source);
+        Assert.AreEqual(expectedIndex, kbSource.IndexOf(token));
+    }
+
+    /// <summary>
+    /// Tests for the indexOf method implementation where an exceptional condition is encountered.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bat", "", -1)]
+    [DataRow("bat", null, -1)]
+    public void IndexOf_Throw(string source, string token, int expectedIndex)
+    {
+        KbString kbSource = new KbString(source);
+        Assert.ThrowsException<ArgumentException>(() => kbSource.IndexOf(token));
+    }
+
 }

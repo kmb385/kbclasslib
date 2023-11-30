@@ -188,12 +188,12 @@ public class KbString
 
             // Advance sourceIndex past last delimiter match using non-zero based Length property.
             sourceIndex += delimiter.Length;
+
             // Position the index for the next copy. 
             tokenizedSourceOffset = sourceIndex;
         }
 
         // Handle final token, which is either a delimiter or a token.
-
         // Compute length of final token.
         int untokenizedSourceLength = sourceLength - tokenizedSourceOffset;
 
