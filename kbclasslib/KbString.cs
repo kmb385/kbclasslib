@@ -14,12 +14,12 @@ public class KbString
     /// Constructor for <see cref="KbString"/> that accepts a <see cref="string"/> value.
     /// </summary>
     /// <param name="value">A <see cref="string"/> value to create the <see cref="KbString"/> from.</param>
-    /// <exception cref="ArgumentException">Thrown when value is null or empty.</exception>
+    /// <exception cref="ArgumentException">Thrown when value is null.</exception>
     public KbString(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (value is null)
         {
-            throw new ArgumentException(nameof(value));
+            throw new ArgumentNullException(nameof(value));
         }
 
         this.characters = value.ToCharArray();
@@ -29,12 +29,12 @@ public class KbString
     /// Constructor for <see cref="KbString"/> that accepts a <see cref="char[]"/> value.
     /// </summary>
     /// <param name="characters">A <see cref="char[]"/> value to create the <see cref="KbString"/> from.</param>
-    /// <exception cref="ArgumentException">Thrown when characters is null or empty.
+    /// <exception cref="ArgumentException">Thrown when characters is null.
     public KbString(char[] characters)
     {
-        if (characters == null || characters.Length == 0)
+        if (characters == null)
         {
-            throw new ArgumentException(nameof(characters));
+            throw new ArgumentNullException(nameof(characters));
         }
 
         this.characters = characters;
@@ -163,9 +163,15 @@ public class KbString
     {
         int notFound = -1;
 
-        if (string.IsNullOrWhiteSpace(token))
+        if (token == null)
         {
-            throw new ArgumentException(nameof(token));
+            throw new ArgumentNullException(nameof(token));
+        }
+
+        if(token == string.Empty)
+        {
+            // Set theory denotes the empty set as a member of the set.  Established convention in major languages.
+            return startIndex;
         }
 
         if(this.characters.Length < token.Length)

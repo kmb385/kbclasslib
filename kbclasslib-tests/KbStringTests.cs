@@ -14,6 +14,8 @@ public class KbStringTests
     [TestMethod]
     public void Constructor_String_Succeeds()
     {
+        Assert.IsNotNull(new KbString(""));
+        Assert.IsNotNull(new KbString(" "));
         Assert.IsNotNull(new KbString("b"));
         Assert.IsNotNull(new KbString("bengal"));
         Assert.IsNotNull(new KbString("bengal cat"));
@@ -23,12 +25,10 @@ public class KbStringTests
     /// Tests for exceptional conditions when the string constructor is provided null or empty values.
     /// </summary>
     [TestMethod]
-    public void Constructor_String_Empty_Throws()
+    public void Constructor_String_Assertions_Throws()
     {
         string value = null;
-        Assert.ThrowsException<ArgumentException>(() => new KbString(value));
-
-        Assert.ThrowsException<ArgumentException>(() => new KbString(String.Empty));
+        Assert.ThrowsException<ArgumentNullException>(() => new KbString(value));
     }
 
     /// <summary>
@@ -37,6 +37,7 @@ public class KbStringTests
     [TestMethod]
     public void Constructor_Chars_Succeeds()
     {
+        Assert.IsNotNull(new KbString(new char[] { }));
         Assert.IsNotNull(new KbString(new char[] {'b'}));
         Assert.IsNotNull(new KbString(new char[] { 'b', 'e', 'n', 'g', 'a', 'l' }));
         Assert.IsNotNull(new KbString(new char[] { 'b', 'e', 'n', 'g', 'a', 'l', ' ', 'c', 'a', 't' }));
@@ -46,22 +47,19 @@ public class KbStringTests
     /// Tests for exceptional conditions when the string constructor is provided null or empty values.
     /// </summary>
     [TestMethod]
-    public void Constructor_Chars_Empty_Throws()
+    public void Constructor_CharArray_Assertions_Throws()
     {
-        string value = null;
-        Assert.ThrowsException<ArgumentException>(() => new KbString(new char[] {}));
-
-        Assert.ThrowsException<ArgumentException>(() => new KbString(String.Empty));
 
         char[] chars = null;
-        Assert.ThrowsException<ArgumentException>(() => new KbString(value));
-        Assert.ThrowsException<ArgumentException>(() => new KbString(new char[] {}));
+        Assert.ThrowsException<ArgumentNullException>(() => new KbString(chars));
     }
 
     /// <summary>
     /// Tests for the contains method implementation where a match is found.
     /// </summary>
     [TestMethod]
+    [DataRow("","")]
+    [DataRow("cat","")]
     [DataRow("cat","c")]
     [DataRow("cat","ca")]
     [DataRow("cat","cat")]
@@ -82,6 +80,7 @@ public class KbStringTests
     /// Tests for the contains method implementation where a match is not found.
     /// </summary>
     [TestMethod]
+    [DataRow("","b")]
     [DataRow("cat","b")]
     [DataRow("cat","bat")]
     [DataRow("cat","ate")]
@@ -97,18 +96,18 @@ public class KbStringTests
     /// Tests for exceptional condition when target is null or empty.
     /// </summary>
     [TestMethod]
-    [DataRow("value","")]
     [DataRow("value",null)]
-    public void Contains_EmptyAssertions_Throw(string source, string target)
+    public void Contains_Assertions_Throws(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbSource.Contains(target));
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.Contains(target));
     }
 
     /// <summary>
     /// Tests for the StartsWith method implementation where a match is found.
     /// </summary>
     [TestMethod]
+    [DataRow("cat","")]
     [DataRow("cat","c")]
     [DataRow("cat","ca")]
     [DataRow("cat","cat")]
@@ -141,12 +140,11 @@ public class KbStringTests
     /// Tests for exceptional condition when target is null or empty.
     /// </summary>
     [TestMethod]
-    [DataRow("value","")]
     [DataRow("value",null)]
-    public void StartsWith_EmptyAssertions_Throw(string source, string target)
+    public void StartsWith_Null_Throw(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbSource.StartsWith(target));
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.StartsWith(target));
     }
 
     /// <summary>
@@ -228,6 +226,8 @@ public class KbStringTests
     /// Tests for the indexOf method implementation where the index is successfully returned.
     /// </summary>
     [TestMethod]
+    [DataRow("bat", "", 0, 0)]
+    [DataRow("bat", "", 1, 1)]
     [DataRow("bat", "b", 0, 0)]
     [DataRow("bat", "a", 0, 1)]
     [DataRow("bat", "t", 0, 2)]
@@ -260,12 +260,11 @@ public class KbStringTests
     /// Tests for the indexOf method implementation where an exceptional condition is encountered.
     /// </summary>
     [TestMethod]
-    [DataRow("bat", "", -1)]
     [DataRow("bat", null, -1)]
     public void IndexOf_Throw(string source, string token, int expectedIndex)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbSource.IndexOf(token, 0));
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.IndexOf(token, 0));
     }
 
 }
