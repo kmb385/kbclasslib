@@ -228,14 +228,32 @@ public class KbStringTests
     /// Tests for the indexOf method implementation where the index is successfully returned.
     /// </summary>
     [TestMethod]
-    [DataRow("bat", "b", 0)]
-    [DataRow("bat", "a", 1)]
-    [DataRow("bat", "t", 2)]
-    [DataRow("bat", "x", -1)]
-    public void IndexOf_Succeeds(string source, string token, int expectedIndex)
+    [DataRow("bat", "b", 0, 0)]
+    [DataRow("bat", "a", 0, 1)]
+    [DataRow("bat", "t", 0, 2)]
+    [DataRow("bat", "x", 0, -1)]
+    [DataRow("battalion", "a", 0, 1)]
+    [DataRow("aaaaaa", "a", 0, 0)]
+    [DataRow("aaaaab", "b", 0, 5)]
+    [DataRow("aaaaa", "a", 0, 0)]
+    [DataRow("aaabbaaa", "aaa", 0, 0)]
+    [DataRow("bbaaabbaaa", "aaa", 0, 2)]
+    [DataRow("aaaaa", "a", 1, 1)]
+    [DataRow("aaaaa", "a", 2, 2)]
+    [DataRow("aaaaa", "a", 3, 3)]
+    [DataRow("aaaaa", "a", 4, 4)]
+    [DataRow("ababa", "a", 0, 0)]
+    [DataRow("ababa", "a", 1, 2)]
+    [DataRow("ababa", "a", 2, 2)]
+    [DataRow("ababa", "a", 3, 4)]
+    [DataRow("abbb", "a", 1, -1)]
+    [DataRow("abbaaa", "aaa", 3, 3)]
+    [DataRow("abba", "aaa", 3, -1)]
+    [DataRow("bbaaabbaaa", "aaa", 3, 7)]
+    public void IndexOf_Succeeds(string source, string token, int startIndex, int expectedIndex)
     {
         KbString kbSource = new KbString(source);
-        Assert.AreEqual(expectedIndex, kbSource.IndexOf(token));
+        Assert.AreEqual(expectedIndex, kbSource.IndexOf(token, startIndex));
     }
 
     /// <summary>
@@ -247,7 +265,7 @@ public class KbStringTests
     public void IndexOf_Throw(string source, string token, int expectedIndex)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbSource.IndexOf(token));
+        Assert.ThrowsException<ArgumentException>(() => kbSource.IndexOf(token, 0));
     }
 
 }

@@ -203,4 +203,57 @@ public class KbString
 
         return tokens.ToArray();
     }
+
+    /// <summary>
+    /// Returns an <see cref="int"/> representing the zero-based index where the start of the provided token
+    /// was first found within this <see cref="KbString"/>.
+    /// 
+    /// An empty <see cref="string"/> is 
+    /// </summary>
+    /// <param name="token">A <see cref="string"/> token to locate.</param>
+    /// <returns>An <see cref="int"/> representing the zero-based index where the state of the provided token
+    /// was first found within this <see cref="KbString"/>.  If the token is not present within this <see cref="KbString"/>
+    /// the value -1 is returned</returns>
+    public int IndexOf(string token, int startIndex)
+    {
+        int notFound = -1;
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            throw new ArgumentException(nameof(token));
+        }
+
+        if(this.characters.Length < token.Length)
+        {
+            return notFound;
+        }
+
+        int firstCharacter = 0;
+        int sourceLength = this.characters.Length;
+
+        for (int sourceOffset = startIndex; sourceOffset < sourceLength; sourceOffset++)
+        {
+            if (this.characters[sourceOffset] != token[firstCharacter])
+            {
+                continue;
+            }
+
+            for (int tokenIndex = firstCharacter; tokenIndex < token.Length; tokenIndex++)
+            {
+                int matchIndex = sourceOffset + tokenIndex;
+
+                if (matchIndex >= sourceLength || this.characters[matchIndex] != token[tokenIndex])
+                {
+                    break;
+                }
+
+                if(tokenIndex == token.Length - 1)
+                {
+                    return sourceOffset;
+                }
+            }
+        }
+
+        return notFound;
+    }
 }
