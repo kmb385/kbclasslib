@@ -271,16 +271,19 @@ public class KbStringTests
     /// Tests for the ReplaceFirst method where a replacement occurrs successfully.
     /// </summary>
     [TestMethod]
-    [DataRow("a", "a", "a", "b")]
-    [DataRow("aa", "a", "a", "ba")]
+    [DataRow("a", "a", "b", "b")]
+    [DataRow("aa", "a", "b", "ba")]
     [DataRow("ab", "b", "a", "aa")]
     [DataRow("a", "a", "cc", "cc")]
     [DataRow("ab", "a", "cc", "ccb")]
     [DataRow("ab", "b", "cc", "acc")]
+    [DataRow("aaabbb", "aaa", "", "bbb")]
+    [DataRow("aaabbb", "aaa", "b", "bbbb")]
+    [DataRow("aaabbbccc", "bbbccc", "de", "aaade")]
     public void ReplaceFirst_Succeeds(string source, string searchToken, string replaceToken, string expectedResult)
     {
         KbString kbSource = new KbString(source);
-        Assert.AreEqual(source, kbSource.ReplaceFirst(searchToken, replaceToken));
+        Assert.AreEqual(expectedResult, kbSource.ReplaceFirst(searchToken, replaceToken));
     }
 
     /// <summary>

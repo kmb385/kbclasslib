@@ -8,6 +8,14 @@
 /// </summary>
 public class KbString
 {
+    /// <summary>
+    /// Index of not found constant for readability.
+    /// </summary>
+    private const int IndexNotFound = -1;
+
+    /// <summary>
+    /// An <see cref="Array"/> representing the sequence of <see cref="char"/> in the <see cref="KbString"/>.
+    /// </summary>
     private readonly char[] characters;
 
     /// <summary>
@@ -47,7 +55,7 @@ public class KbString
     /// <returns>Returns <see cref="bool"/> true when this <see cref="string"/> contains the provided target.</returns>
     public bool Contains(string target)
     {
-        return this.IndexOf(target, 0) != -1;
+        return this.IndexOf(target, 0) != IndexNotFound;
     }
 
     /// <summary>
@@ -161,8 +169,6 @@ public class KbString
     /// the value -1 is returned</returns>
     public int IndexOf(string token, int startIndex)
     {
-        int notFound = -1;
-
         if (token == null)
         {
             throw new ArgumentNullException(nameof(token));
@@ -176,7 +182,7 @@ public class KbString
 
         if(this.characters.Length < token.Length)
         {
-            return notFound;
+            return IndexNotFound;
         }
 
         int firstCharacter = 0;
@@ -205,6 +211,93 @@ public class KbString
             }
         }
 
-        return notFound;
+        return IndexNotFound;
+    }
+
+    /// <summary>
+    /// Returns a new <see cref="KbString"/> with the first instance of the provided search token replaced
+    /// by the provided replaceToken.
+    /// </summary>
+    /// <param name="searchToken">A <see cref="string"/> to replace.</param>
+    /// <param name="replaceToken">A <see cref="string"/> to substitute for the searchToken.</param>
+    /// <returns>A <see cref="string"/> with the first instance of the provided search token replaced
+    /// by the provided replaceToken.
+    /// </returns>
+    public string ReplaceFirst(string searchToken, string replaceToken)
+    {
+        if(searchToken == null)
+        {
+            throw new ArgumentNullException(nameof(searchToken));
+        }
+
+        if(replaceToken == null)
+        {
+            throw new ArgumentNullException(nameof(replaceToken));
+        }
+
+        // Attempt to find first occurrence.
+        int firstMatch = this.IndexOf(searchToken, 0);
+
+        // Short circuit when no search token is present in string.
+        if(firstMatch == IndexNotFound)
+        {
+            return new string(this.characters);
+        }
+
+        /*
+         * Compute the length of the result.
+         *
+         * "123456".ReplaceFirst("1","12"); = (6 + 2) - 1 = 7 = "1223456".Length
+        */
+        int resultLength = (this.characters.Length + replaceToken.Length) - searchToken.Length;
+        char[] resultCharacters = new char[resultLength];
+
+        // Cursor to track position in the result set under construction.
+        int resultIndex = 0;
+
+        // Cursor to track position in the source string as its copied over to result.
+        int sourceIndex = 0;
+
+        /*
+         * Compute the index of the last character to be replaced
+         *
+         * Search.Length <= Replacement.Length
+         * "123456".ReplaceFirst("1","12");   = 0 + Abs(1 - 2) = 1 = "1223456".IndexOf(2,0)
+         * "123456".ReplaceFirst("4","Four"); = 3 + Abs(1 - 4) = 6 = "123Four56".IndexOf(r,0)
+         * "aaabbb".ReplaceFirst("aaa","b");  = 0 + Abs(3 - 1) = 2 = "bbbb".IndexOf(b,0)
+         *
+         * Search.Length > Replacement.Length
+         * "aaacccbbb".ReplaceFirst("ccc","b");     = 3 + 1 - ZEROBASE = 3 = "aaabbbbb".IndexOf(b,0)
+         * "aaacccbbb".ReplaceFirst("cccbbb","de"); = 3 + 2 - ZEROBASE = 4 = "aaade".IndexOf(e,4)
+        */
+        int lastReplacement = searchToken.Length <= replaceToken.Length
+            ? firstMatch + (Math.Abs(searchToken.Length - replaceToken.Length))
+            : firstMatch + replaceToken.Length - 1;
+
+        // Copy source characters prior to the start of replacement.
+        while(resultIndex < firstMatch)
+        {
+            resultCharacters[sourceIndex++] = this.characters[resultIndex++];
+        }
+
+        // Cursor to track position of replacement string as its copied over to result.
+        int replaceIndex = 0;
+
+        // Copy characters to be replaced. Account for empty string.
+        while(replaceToken.Length > 0 && resultIndex <= lastReplacement)
+        {
+            resultCharacters[resultIndex++] = replaceToken[replaceIndex++];
+        }
+
+        // Skip copy of characters in the source that should be replaced.
+        sourceIndex += searchToken.Length;
+
+        // Copy source characters after the replacement if they exist.
+        while(resultIndex < resultCharacters.Length)
+        {
+            resultCharacters[resultIndex++] = this.characters[sourceIndex++];
+        }
+
+        return new string(resultCharacters);
     }
 }
