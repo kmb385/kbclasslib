@@ -280,6 +280,10 @@ public class KbStringTests
     [DataRow("aaabbb", "aaa", "", "bbb")]
     [DataRow("aaabbb", "aaa", "b", "bbbb")]
     [DataRow("aaabbbccc", "bbbccc", "de", "aaade")]
+    [DataRow("My cat is a bengal cat.", "cat", "feline", "My feline is a bengal cat.")]
+    [DataRow("My cat is a bengal cat.", ".", "!", "My cat is a bengal cat!")]
+    [DataRow("My cat is a bengal cat.", "My", "Our", "Our cat is a bengal cat.")]
+    [DataRow("My cat is a bengal cat.", "My cat", "My life", "My life is a bengal cat.")]
     public void ReplaceFirst_Succeeds(string source, string searchToken, string replaceToken, string expectedResult)
     {
         KbString kbSource = new KbString(source);
@@ -302,7 +306,7 @@ public class KbStringTests
     /// </summary>
     [TestMethod]
     [DataRow("a", "a", "b", "b")]
-    [DataRow("aa", "a", "b", "ba")]
+    [DataRow("aa", "a", "b", "bb")]
     [DataRow("ab", "b", "a", "aa")]
     [DataRow("a", "a", "cc", "cc")]
     [DataRow("ab", "a", "cc", "ccb")]
@@ -310,6 +314,13 @@ public class KbStringTests
     [DataRow("aaabbb", "aaa", "", "bbb")]
     [DataRow("aaabbb", "aaa", "b", "bbbb")]
     [DataRow("aaabbbccc", "bbbccc", "de", "aaade")]
+    [DataRow("My cat is a bengal cat.", "cat", "feline", "My feline is a bengal feline.")]
+    [DataRow("My cat is a bengal cat.", ".", "!", "My cat is a bengal cat!")]
+    [DataRow("My cat is a bengal cat.", "My", "Our", "Our cat is a bengal cat.")]
+    [DataRow("My cat is a bengal cat.", "My cat", "My life", "My life is a bengal cat.")]
+    [DataRow("My cat is a bengal cat.", " ", "|", "My|cat|is|a|bengal|cat.")]
+    [DataRow("My |cat |is |a |bengal |cat.", " |", "||", "My||cat||is||a||bengal||cat.")]
+    [DataRow("My |cat |is |a |bengal |cat.", " |", " ||", "My ||cat ||is ||a ||bengal ||cat.")]
     public void Replace_Succeeds(string source, string searchToken, string replaceToken, string expectedResult)
     {
         KbString kbSource = new KbString(source);

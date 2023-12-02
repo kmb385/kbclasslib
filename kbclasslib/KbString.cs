@@ -14,6 +14,11 @@ public class KbString
     private const int IndexNotFound = -1;
 
     /// <summary>
+    /// First Character Index constant for readability.
+    /// </summary>
+    private const int FirstCharIndex = 0;
+
+    /// <summary>
     /// An <see cref="Array"/> representing the sequence of <see cref="char"/> in the <see cref="KbString"/>.
     /// </summary>
     private readonly char[] characters;
@@ -217,6 +222,8 @@ public class KbString
     /// <summary>
     /// Returns a new <see cref="KbString"/> with the first instance of the provided search token replaced
     /// by the provided replaceToken.
+    /// 
+    /// Time Complexity: Constant time O(n).
     /// </summary>
     /// <param name="searchToken">A <see cref="string"/> to replace.</param>
     /// <param name="replaceToken">A <see cref="string"/> to substitute for the searchToken.</param>
@@ -258,22 +265,6 @@ public class KbString
         // Cursor to track position in the source string as its copied over to result.
         int sourceIndex = 0;
 
-        /*
-         * Compute the index of the last character to be replaced
-         *
-         * Search.Length <= Replacement.Length
-         * "123456".ReplaceFirst("1","12");   = 0 + Abs(1 - 2) = 1 = "1223456".IndexOf(2,0)
-         * "123456".ReplaceFirst("4","Four"); = 3 + Abs(1 - 4) = 6 = "123Four56".IndexOf(r,0)
-         * "aaabbb".ReplaceFirst("aaa","b");  = 0 + Abs(3 - 1) = 2 = "bbbb".IndexOf(b,0)
-         *
-         * Search.Length > Replacement.Length
-         * "aaacccbbb".ReplaceFirst("ccc","b");     = 3 + 1 - ZEROBASE = 3 = "aaabbbbb".IndexOf(b,0)
-         * "aaacccbbb".ReplaceFirst("cccbbb","de"); = 3 + 2 - ZEROBASE = 4 = "aaade".IndexOf(e,4)
-        */
-        int lastReplacement = searchToken.Length <= replaceToken.Length
-            ? firstMatch + (Math.Abs(searchToken.Length - replaceToken.Length))
-            : firstMatch + replaceToken.Length - 1;
-
         // Copy source characters prior to the start of replacement.
         while(resultIndex < firstMatch)
         {
@@ -284,7 +275,7 @@ public class KbString
         int replaceIndex = 0;
 
         // Copy characters to be replaced. Account for empty string.
-        while(replaceToken.Length > 0 && resultIndex <= lastReplacement)
+        while(replaceToken.Length > 0 && replaceIndex < replaceToken.Length)
         {
             resultCharacters[resultIndex++] = replaceToken[replaceIndex++];
         }
@@ -305,12 +296,62 @@ public class KbString
     /// Returns a new <see cref="String"/> with all occurrences of the provided search token replaced by the provided
     /// replace token.
     /// </summary>
-    /// <param name="searchToken"></param>
-    /// <param name="replaceToken"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    /// <param name="searchToken">A <see cref="string"/> to replace.</param>
+    /// <param name="replaceToken">A <see cref="string"/> to substitute for the searchToken.</param>
+    /// <returns>A <see cref="string"/> with all instances of the provided search token replaced
+    /// by the provided replaceToken.
     public string Replace(string searchToken, string replaceToken)
     {
-        throw new NotImplementedException();
+        this.NullGuard(searchToken, nameof(searchToken));
+        this.NullGuard(replaceToken, nameof(replaceToken));
+
+        /*
+         * "My cat is a bengal cat.".Replace("cat", "feline") => "My feline is a bengal feline." 
+         * 
+         *  Solution 1: "Replace Next Strategy"
+         *  1. Loop while search string is not found in string.
+         *  2. When found, replace the search string with the target string.
+         *  3. Eventually all occurrences are replaced or loop ends.
+         *  4. Note:  Similar to a Find/Replace capability in a text editor, where you can hit "Replace Next (not exact analogy)".
+         *  5. Note:  Implemenation has poor time commplexity.  Outer loop is O(n) * O(n) IndexOf/ReplaceFirst invocations = Quadratic Time (N^2)
+         *  
+         *  Solution 2:
+         *  1. Use a list to store the result.
+         *  2. Split on the provided search string.
+         *  3. Join with the replace token. 
+         * 
+         * Solution 3:
+         * 1. First pass to find the occurrences and their indexes.
+         * 2. Drop out if no occurrences. Otherwise proceed. 
+         * 3. Calculate the length of the new string (similar to replace first)
+         * 4. Loop through source before each occurrence, track position with cursor (sourceCursor)
+         * 5. Loop through each occurrence, calculate the start/end, update (replaceCursor)
+         * 6. Update sourceCursor to account for copied characters.
+         * 7. Loop through remaning source (if necessary), and append to results. 
+        */
+
+        // Implementation: Solution 1 Replace Next
+
+        // Copy this string to seed result and maintain immutability.
+        KbString result = new KbString(this.characters);
+
+        for(int matchIndex = result.IndexOf(searchToken, FirstCharIndex); // Start with the (potential) first occurrence
+            matchIndex != IndexNotFound; // Iterate while there is a match to replace
+            matchIndex = result.IndexOf(searchToken, matchIndex + replaceToken.Length)) // Search for next match on each occurrence.
+        {
+            // TODO: Replace string type return values in a refactor.
+            result = new KbString(result.ReplaceFirst(searchToken, replaceToken));
+        }
+
+        return new String(result.characters);
+    }
+
+    private void NullGuard(string parameterName, string parameterValue)
+    {
+        // TODO: Replace explicit guard logic with helper in a refactor. 
+        if(parameterValue == null)
+        {
+            throw new ArgumentNullException(parameterName);
+        }
     }
 }
