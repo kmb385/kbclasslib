@@ -302,6 +302,51 @@ public class KbStringTests
     }
 
     /// <summary>
+    /// Tests for the indexOf method implementation where the index is successfully returned.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bat", "", 2, 2)]
+    [DataRow("bat", "", 1, 1)]
+    [DataRow("bat", "b", 2, 0)]
+    [DataRow("bat", "a", 2, 1)]
+    [DataRow("bat", "t", 2, 2)]
+    [DataRow("bat", "x", 2, -1)]
+    [DataRow("aaaaa", "a", 0, 0)]
+    [DataRow("aaaaa", "a", 1, 1)]
+    [DataRow("aaaaa", "a", 2, 2)]
+    [DataRow("aaaaa", "a", 3, 3)]
+    [DataRow("aaaaa", "a", 4, 4)]
+    [DataRow("ababa", "a", 0, 0)]
+    [DataRow("ababa", "a", 3, 2)]
+    [DataRow("ababa", "a", 2, 2)]
+    [DataRow("ababa", "a", 3, 2)]
+    [DataRow("battalion", "a", 8, 4)]
+    [DataRow("aaaaab", "b", 5, 5)]
+    [DataRow("aaabbaaa", "aaa", 5, 5)]
+    [DataRow("bbaaabbaaa", "aaa", 6, 2)]
+    [DataRow("abbb", "a", 3, 0)]
+    [DataRow("bbba", "a", 3, 3)]
+    [DataRow("abbaaa", "aaa", 0, -1)]
+    [DataRow("abba", "aaa", 0, -1)]
+    [DataRow("bbaaabbaaa", "aaa", 7, 7)]
+    public void LastIndexOf_Succeeds(string source, string token, int startIndex, int expectedIndex)
+    {
+        KbString kbSource = new KbString(source);
+        Assert.AreEqual(expectedIndex, kbSource.LastIndexOf(token, startIndex));
+    }
+
+    /// <summary>
+    /// Tests for the indexOf method implementation where an exceptional condition is encountered.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bat", null, -1)]
+    public void LastIndexOf_Throw(string source, string token, int expectedIndex)
+    {
+        KbString kbSource = new KbString(source);
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.LastIndexOf(token, 0));
+    }
+
+    /// <summary>
     /// Tests for the Replace method where a replacement occurrs successfully.
     /// </summary>
     [TestMethod]
@@ -311,6 +356,7 @@ public class KbStringTests
     [DataRow("a", "a", "cc", "cc")]
     [DataRow("ab", "a", "cc", "ccb")]
     [DataRow("ab", "b", "cc", "acc")]
+    [DataRow("aabbcc", "bb", "dd", "aaddcc")]
     [DataRow("aaabbb", "aaa", "", "bbb")]
     [DataRow("aaabbb", "aaa", "b", "bbbb")]
     [DataRow("aaabbbccc", "bbbccc", "de", "aaade")]

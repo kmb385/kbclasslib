@@ -131,7 +131,7 @@ public class KbString
         // Only tokenize from tokens 0...N-1.
         while (sourceIndex <= sourceLength - delimiter.Length)
         {
-            if(delimiter != this.Substring(sourceIndex, delimiter.Length))
+            if (delimiter != this.Substring(sourceIndex, delimiter.Length))
             {
                 sourceIndex++;
                 continue;
@@ -169,6 +169,7 @@ public class KbString
     /// An empty <see cref="string"/> is 
     /// </summary>
     /// <param name="token">A <see cref="string"/> token to locate.</param>
+    /// <param name="startIndex">A zero based index to begin the operation from.</param>
     /// <returns>An <see cref="int"/> representing the zero-based index where the state of the provided token
     /// was first found within this <see cref="KbString"/>.  If the token is not present within this <see cref="KbString"/>
     /// the value -1 is returned</returns>
@@ -179,13 +180,13 @@ public class KbString
             throw new ArgumentNullException(nameof(token));
         }
 
-        if(token == string.Empty)
+        if (token == string.Empty)
         {
             // Set theory denotes the empty set as a member of the set.  Established convention in major languages.
             return startIndex;
         }
 
-        if(this.characters.Length < token.Length)
+        if (this.characters.Length < token.Length)
         {
             return IndexNotFound;
         }
@@ -209,7 +210,7 @@ public class KbString
                     break;
                 }
 
-                if(tokenIndex == token.Length - 1)
+                if (tokenIndex == token.Length - 1)
                 {
                     return sourceOffset;
                 }
@@ -232,12 +233,12 @@ public class KbString
     /// </returns>
     public string ReplaceFirst(string searchToken, string replaceToken)
     {
-        if(searchToken == null)
+        if (searchToken == null)
         {
             throw new ArgumentNullException(nameof(searchToken));
         }
 
-        if(replaceToken == null)
+        if (replaceToken == null)
         {
             throw new ArgumentNullException(nameof(replaceToken));
         }
@@ -246,7 +247,7 @@ public class KbString
         int firstMatch = this.IndexOf(searchToken, 0);
 
         // Short circuit when no search token is present in string.
-        if(firstMatch == IndexNotFound)
+        if (firstMatch == IndexNotFound)
         {
             return new string(this.characters);
         }
@@ -254,7 +255,7 @@ public class KbString
         /*
          * Compute the length of the result.
          *
-         * "123456".ReplaceFirst("1","12"); = (6 + 2) - 1 = 7 = "1223456".Length
+         * "123456".ReplaceFirst("1","12"); = (6 + 2) - 1 == 7 == "1223456".Length
         */
         int resultLength = (this.characters.Length + replaceToken.Length) - searchToken.Length;
         char[] resultCharacters = new char[resultLength];
@@ -266,7 +267,7 @@ public class KbString
         int sourceIndex = 0;
 
         // Copy source characters prior to the start of replacement.
-        while(resultIndex < firstMatch)
+        while (resultIndex < firstMatch)
         {
             resultCharacters[sourceIndex++] = this.characters[resultIndex++];
         }
@@ -275,7 +276,7 @@ public class KbString
         int replaceIndex = 0;
 
         // Copy characters to be replaced. Account for empty string.
-        while(replaceToken.Length > 0 && replaceIndex < replaceToken.Length)
+        while (replaceToken.Length > 0 && replaceIndex < replaceToken.Length)
         {
             resultCharacters[resultIndex++] = replaceToken[replaceIndex++];
         }
@@ -284,7 +285,7 @@ public class KbString
         sourceIndex += searchToken.Length;
 
         // Copy source characters after the replacement if they exist.
-        while(resultIndex < resultCharacters.Length)
+        while (resultIndex < resultCharacters.Length)
         {
             resultCharacters[resultIndex++] = this.characters[sourceIndex++];
         }
@@ -312,8 +313,9 @@ public class KbString
          *  1. Loop while search string is not found in string.
          *  2. When found, replace the search string with the target string.
          *  3. Eventually all occurrences are replaced or loop ends.
-         *  4. Note:  Similar to a Find/Replace capability in a text editor, where you can hit "Replace Next (not exact analogy)".
-         *  5. Note:  Implemenation has poor time commplexity.  Outer loop is O(n) * O(n) IndexOf/ReplaceFirst invocations = Quadratic Time (N^2)
+         *  Note:  Similar to a Find/Replace capability in a text editor, where you can hit "Replace Next (not exact analogy)".
+         *  Note:  Implemenation has poor time commplexity.  Outer loop is O(n) * O(n) IndexOf/ReplaceFirst invocations = Quadratic Time (N^2)
+         *  Note:  Strategy needs to be executed from the end of the string to avoid bugs where matches create additional matches. 
          *  
          *  Solution 2:
          *  1. Use a list to store the result.
@@ -332,26 +334,111 @@ public class KbString
 
         // Implementation: Solution 1 Replace Next
 
-        // Copy this string to seed result and maintain immutability.
-        KbString result = new KbString(this.characters);
+        string result = string.Empty;
 
-        for(int matchIndex = result.IndexOf(searchToken, FirstCharIndex); // Start with the (potential) first occurrence
+        // Cursor to track the last position copied from source to result.
+        int copyIndex = 0;
+
+        for (int matchIndex = this.IndexOf(searchToken, FirstCharIndex); // Start with the (potential) first occurrence
             matchIndex != IndexNotFound; // Iterate while there is a match to replace
-            matchIndex = result.IndexOf(searchToken, matchIndex + replaceToken.Length)) // Search for next match on each occurrence.
+            matchIndex = this.IndexOf(searchToken, matchIndex + searchToken.Length)) // Search for next match on each occurrence.
         {
-            // TODO: Replace string type return values in a refactor.
-            result = new KbString(result.ReplaceFirst(searchToken, replaceToken));
+            // Length of characters prior to the match.
+            int prefixLength = matchIndex - copyIndex;
+
+            if(prefixLength > 0)
+            {
+                result += this.Substring(copyIndex, prefixLength);
+            }
+
+            result += replaceToken;
+
+            // Position of match + skip the search token.
+            copyIndex = matchIndex + searchToken.Length;
         }
 
-        return new String(result.characters);
+        int sourceOffset = copyIndex + searchToken.Length - 1;
+
+        // There may be remaining characters after the last match.
+        if(copyIndex < this.characters.Length)
+        {
+            result += new string(this.Substring(copyIndex, this.characters.Length - copyIndex));
+        }
+
+        return result;
     }
 
-    private void NullGuard(string parameterName, string parameterValue)
+    /// <summary>
+    /// Returns an <see cref="int"/> representing the zero-based index where of the provided token
+    /// was first found within this <see cref="KbString"/>.
+    /// 
+    /// An empty <see cref="string"/> is 
+    /// </summary>
+    /// <param name="token">A <see cref="string"/> token to locate.</param>
+    /// <param name="startIndex">A zero based index to begin the operation from.</param>
+    /// <returns>An <see cref="int"/> representing the zero-based index where the state of the provided token
+    /// was first found within this <see cref="KbString"/>.  If the token is not present within this <see cref="KbString"/>
+    /// the value -1 is returned</returns>
+    public int LastIndexOf(string token, int startIndex)
     {
-        // TODO: Replace explicit guard logic with helper in a refactor. 
-        if(parameterValue == null)
+        this.NullGuard(token, nameof(token));
+
+        if(startIndex < 0 || startIndex > this.characters.Length - 1)
         {
-            throw new ArgumentNullException(parameterName);
+            throw new ArgumentException(nameof(startIndex));
         }
+
+        if (token == string.Empty)
+        {
+            // Set theory denotes the empty set as a member of the set.  Established convention in major languages.
+            return startIndex;
+        }
+
+        if (this.characters.Length < token.Length)
+        {
+            return IndexNotFound;
+        }
+
+        if(startIndex < token.Length - 1)
+        {
+            return -1;
+        }
+
+        // Match cannot be found before (end of string -  searchToken length).
+        int lastPotentialMatchIndex = Math.Min(startIndex, this.characters.Length - token.Length);
+
+        for (int sourceIndex = lastPotentialMatchIndex; sourceIndex >= 0; sourceIndex--)
+        {
+            if (this.characters[sourceIndex] != token[FirstCharIndex])
+            {
+                continue;
+            }
+
+            int tokenIndex = FirstCharIndex;
+
+            while (tokenIndex < token.Length)
+            {
+                if (this.characters[sourceIndex + tokenIndex] != token[tokenIndex++])
+                {
+                    break;
+                }
+
+                if(tokenIndex == token.Length)
+                {
+                    return sourceIndex;
+                }
+            }
+        }
+
+        return IndexNotFound;
     }
+
+private void NullGuard(string parameterName, string parameterValue)
+{
+    // TODO: Replace explicit guard logic with helper in a refactor. 
+    if (parameterValue == null)
+    {
+        throw new ArgumentNullException(parameterName);
+    }
+}
 }
