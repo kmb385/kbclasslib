@@ -296,4 +296,34 @@ public class KbStringTests
         KbString kbSource = new KbString(source);
         Assert.ThrowsException<ArgumentNullException>(() => kbSource.ReplaceFirst(searchToken, replaceToken));
     }
+
+    /// <summary>
+    /// Tests for the Replace method where a replacement occurrs successfully.
+    /// </summary>
+    [TestMethod]
+    [DataRow("a", "a", "b", "b")]
+    [DataRow("aa", "a", "b", "ba")]
+    [DataRow("ab", "b", "a", "aa")]
+    [DataRow("a", "a", "cc", "cc")]
+    [DataRow("ab", "a", "cc", "ccb")]
+    [DataRow("ab", "b", "cc", "acc")]
+    [DataRow("aaabbb", "aaa", "", "bbb")]
+    [DataRow("aaabbb", "aaa", "b", "bbbb")]
+    [DataRow("aaabbbccc", "bbbccc", "de", "aaade")]
+    public void Replace_Succeeds(string source, string searchToken, string replaceToken, string expectedResult)
+    {
+        KbString kbSource = new KbString(source);
+        Assert.AreEqual(expectedResult, kbSource.Replace(searchToken, replaceToken));
+    }
+
+    /// <summary>
+    /// Tests for the ReplaceFirst method implementation where an exceptional condition is encountered.
+    /// </summary>
+    [TestMethod]
+    [DataRow("a", null, null, "")]
+    public void Replace_Throw(string source, string searchToken, string replaceToken, string expectedResult)
+    {
+        KbString kbSource = new KbString(source);
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.Replace(searchToken, replaceToken));
+    }
 }

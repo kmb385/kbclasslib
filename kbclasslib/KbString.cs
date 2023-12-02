@@ -300,4 +300,17 @@ public class KbString
 
         return new string(resultCharacters);
     }
+
+    /// <summary>
+    /// Returns a new <see cref="String"/> with all occurrences of the provided search token replaced by the provided
+    /// replace token.
+    /// </summary>
+    /// <param name="searchToken"></param>
+    /// <param name="replaceToken"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public string Replace(string searchToken, string replaceToken)
+    {
+        throw new NotImplementedException();
+    }
 }
