@@ -73,7 +73,8 @@ public class KbStringTests
     public void Contains_Match_Succeeds(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.IsTrue(kbSource.Contains(target));
+        KbString kbTarget= new KbString(target);
+        Assert.IsTrue(kbSource.Contains(kbTarget));
     }
 
     /// <summary>
@@ -89,7 +90,8 @@ public class KbStringTests
     public void Contains_NoMatch_Succeeds(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.IsFalse(kbSource.Contains(target));
+        KbString kbTarget= new KbString(target);
+        Assert.IsFalse(kbSource.Contains(kbTarget));
     }
 
     /// <summary>
@@ -100,7 +102,8 @@ public class KbStringTests
     public void Contains_Assertions_Throws(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentNullException>(() => kbSource.Contains(target));
+        KbString kbTarget = target == null ? null : new KbString(target);
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.Contains(kbTarget));
     }
 
     /// <summary>
@@ -116,7 +119,8 @@ public class KbStringTests
     public void StartsWith_Match_Succeeds(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.IsTrue(kbSource.StartsWith(target));
+        KbString kbTarget= new KbString(target);
+        Assert.IsTrue(kbSource.StartsWith(kbTarget));
     }
 
     /// <summary>
@@ -133,7 +137,8 @@ public class KbStringTests
     public void StartsWith_NoMatch_Succeeds(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.IsFalse(kbSource.StartsWith(target));
+        KbString kbTarget= new KbString(target);
+        Assert.IsFalse(kbSource.StartsWith(kbTarget));
     }
 
     /// <summary>
@@ -144,7 +149,8 @@ public class KbStringTests
     public void StartsWith_Null_Throw(string source, string target)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentNullException>(() => kbSource.StartsWith(target));
+        KbString kbTarget = target == null ? null : new KbString(target);
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.StartsWith(kbTarget));
     }
 
     /// <summary>
@@ -160,7 +166,8 @@ public class KbStringTests
     public void Substring_Succeeds(string source, int start, int length, string result)
     {
         KbString kbSource = new KbString(source);
-        Assert.AreEqual(result, kbSource.Substring(start, length));
+        KbString kbResult = new KbString(result);
+        Assert.AreEqual(kbResult, kbSource.Substring(start, length));
     }
 
     /// <summary>
@@ -200,13 +207,15 @@ public class KbStringTests
     public void Split_Succeeds(string source, string delimiter)
     {
         KbString kbSource = new KbString(source);
-        string[] tokens = kbSource.Split(delimiter);
+        KbString kbDelimiter = new KbString(delimiter);
+
+        KbString[] tokens = kbSource.Split(kbDelimiter);
         string[] expectedTokens = source.Split(delimiter);
         Assert.AreEqual(expectedTokens.Length, tokens.Length);
 
         for (int tokenIndex = 0; tokenIndex < tokens.Length; tokenIndex++)
         {
-            Assert.AreEqual(expectedTokens[tokenIndex], tokens[tokenIndex]);
+            Assert.AreEqual(expectedTokens[tokenIndex], tokens[tokenIndex].ToString());
         }
     }
 
@@ -219,7 +228,8 @@ public class KbStringTests
     public void Split_InvalidParameters_Throw(string source, string delimiter)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentException>(() => kbSource.Split(delimiter));
+        KbString kbDelimiter = new KbString(delimiter);
+        Assert.ThrowsException<ArgumentException>(() => kbSource.Split(kbDelimiter));
     }
 
     /// <summary>
@@ -253,7 +263,8 @@ public class KbStringTests
     public void IndexOf_Succeeds(string source, string token, int startIndex, int expectedIndex)
     {
         KbString kbSource = new KbString(source);
-        Assert.AreEqual(expectedIndex, kbSource.IndexOf(token, startIndex));
+        KbString kbToken = new KbString(token);
+        Assert.AreEqual(expectedIndex, kbSource.IndexOf(kbToken, startIndex));
     }
 
     /// <summary>
@@ -264,7 +275,8 @@ public class KbStringTests
     public void IndexOf_Throw(string source, string token, int expectedIndex)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentNullException>(() => kbSource.IndexOf(token, 0));
+        KbString kbToken = token == null ? null : new KbString(token);
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.IndexOf(kbToken, 0));
     }
 
     /// <summary>
@@ -288,7 +300,10 @@ public class KbStringTests
     {
         KbString kbSource = new KbString(source);
         KbString kbExpectedResult = new KbString(expectedResult);
-        Assert.AreEqual(kbExpectedResult, kbSource.ReplaceFirst(searchToken, replaceToken));
+        KbString kbSearchToken= new KbString(searchToken);
+        KbString kbReplaceToken= new KbString(replaceToken);
+
+        Assert.AreEqual(kbExpectedResult, kbSource.ReplaceFirst(kbSearchToken, kbReplaceToken));
     }
 
     /// <summary>
@@ -299,7 +314,10 @@ public class KbStringTests
     public void ReplaceFirst_Throw(string source, string searchToken, string replaceToken, string expectedResult)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentNullException>(() => kbSource.ReplaceFirst(searchToken, replaceToken));
+        KbString kbSearchToken = searchToken == null ? null : new KbString(searchToken);
+        KbString kbReplaceToken = replaceToken == null ? null : new KbString(replaceToken);
+
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.ReplaceFirst(kbSearchToken, kbReplaceToken));
     }
 
     /// <summary>
@@ -371,7 +389,10 @@ public class KbStringTests
     public void Replace_Succeeds(string source, string searchToken, string replaceToken, string expectedResult)
     {
         KbString kbSource = new KbString(source);
-        Assert.AreEqual(expectedResult, kbSource.Replace(searchToken, replaceToken));
+        KbString kbSearchToken= new KbString(searchToken);
+        KbString kbReplaceToken= new KbString(replaceToken);
+
+        Assert.AreEqual(expectedResult, kbSource.Replace(kbSearchToken, kbReplaceToken));
     }
 
     /// <summary>
@@ -382,7 +403,10 @@ public class KbStringTests
     public void Replace_Throw(string source, string searchToken, string replaceToken, string expectedResult)
     {
         KbString kbSource = new KbString(source);
-        Assert.ThrowsException<ArgumentNullException>(() => kbSource.Replace(searchToken, replaceToken));
+        KbString kbSearchToken = searchToken == null ? null : new KbString(searchToken);
+        KbString kbReplaceToken = replaceToken == null ? null : new KbString(replaceToken);
+
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.Replace(kbSearchToken, kbReplaceToken));
     }
 
     /// <summary>

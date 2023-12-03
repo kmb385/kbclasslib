@@ -58,34 +58,34 @@ public class KbString
     public int Length => this.characters.Length;
 
     /// <summary>
-    /// Returns true if the provided target <see cref="string"/> is found within this <see cref="string"/>.
+    /// Returns true if the provided target <see cref="Kbstring"/> is found within this <see cref="KbString"/>.
     /// </summary>
-    /// <param name="target">A target <see cref="string"/> to search for.</param>
-    /// <returns>Returns <see cref="bool"/> true when this <see cref="string"/> contains the provided target.</returns>
-    public bool Contains(string target)
+    /// <param name="target">A target <see cref="KbString"/> to search for.</param>
+    /// <returns>Returns <see cref="bool"/> true when this <see cref="KbString"/> contains the provided target.</returns>
+    public bool Contains(KbString target)
     {
         return this.IndexOf(target, 0) != IndexNotFound;
     }
 
     /// <summary>
-    /// Returns true when the provided <see cref="string"/> is present at the begining of this <see cref="KbString"/>.
+    /// Returns true when the provided <see cref="KbString"/> is present at the begining of this <see cref="KbString"/>.
     /// </summary>
-    /// <param name="target">The target <see cref="String"/> to find a match for.</param>
+    /// <param name="target">The target <see cref="KbString"/> to find a match for.</param>
     /// <returns>A <see cref="bool"/> that is true when a match is found; Otherwise false.</returns>
-    public bool StartsWith(string target)
+    public bool StartsWith(KbString target)
     {
         return this.IndexOf(target, 0) == 0;
     }
 
     /// <summary>
-    /// Returns a <see cref="string"/> representing a subsequence of this <see cref="KbString"/> starting at the provided
+    /// Returns a <see cref="KbString"/> representing a subsequence of this <see cref="KbString"/> starting at the provided
     /// index with the specified length.
     /// Implementation has linear time complexity O(n)
     /// </summary>
     /// <param name="start">An <see cref="int"/> representing a zero-based index to begin the subsequence.</param>
     /// <param name="length">An <see cref="int"/> representing the length of the subsequence.</param>
-    /// <returns>A <see cref="string"/> subsequence starting at the provided index of the provided length.</returns>
-    public string Substring(int start, int length)
+    /// <returns>A <see cref="KbString"/> subsequence starting at the provided index of the provided length.</returns>
+    public KbString Substring(int start, int length)
     {
         if (start < 0 || this.characters.Length < start)
         {
@@ -112,22 +112,22 @@ public class KbString
             result[copyIndex++] = this.characters[sourceIndex];
         }
 
-        return new String(result);
+        return new KbString(result);
     }
 
     /// <summary>
-    /// Returns an <see cref="Array"/> of <see cref="string"/>s that appear around or between the delimeter.
+    /// Returns an <see cref="Array"/> of <see cref="KbString"/>s that appear around or between the delimeter.
     /// </summary>
     /// <param name="delimiter">A delimiter to split this <see cref="KbString"/> around.</param>
-    /// <returns>An <see cref="Array"/> of <see cref="string"/>.</returns>
-    public string[] Split(string delimiter)
+    /// <returns>An <see cref="Array"/> of <see cref="KbString"/>.</returns>
+    public KbString[] Split(KbString delimiter)
     {
-        if (string.IsNullOrEmpty(delimiter))
+        if (delimiter == null || delimiter == Empty)
         {
             throw new ArgumentException(nameof(delimiter));
         }
 
-        List<string> tokens = new();
+        List<KbString> tokens = new();
 
         int sourceIndex = 0;
         int sourceLength = this.characters.Length;
@@ -147,7 +147,7 @@ public class KbString
             int tokenLength = sourceIndex - tokenizedSourceOffset;
 
             tokens.Add(tokenLength == 0
-                ? string.Empty // No characters prior to the last delimiter, add empty string.
+                ? Empty // No characters prior to the last delimiter, add empty string.
                 : this.Substring(tokenizedSourceOffset, tokenLength)); // Copy all characters prior to the delimiter.
 
             // Advance sourceIndex past last delimiter match using non-zero based Length property.
@@ -162,7 +162,7 @@ public class KbString
         int untokenizedSourceLength = sourceLength - tokenizedSourceOffset;
 
         tokens.Add(untokenizedSourceLength == 0
-            ? string.Empty // No characters prior to the last delimiter add empty string.
+            ? Empty // No characters prior to the last delimiter add empty string.
             : this.Substring(tokenizedSourceOffset, untokenizedSourceLength)); // Copy all characters prior to the delimiter.
 
         return tokens.ToArray();
@@ -179,11 +179,11 @@ public class KbString
     /// <returns>An <see cref="int"/> representing the zero-based index where the state of the provided token
     /// was first found within this <see cref="KbString"/>.  If the token is not present within this <see cref="KbString"/>
     /// the value -1 is returned</returns>
-    public int IndexOf(string token, int startIndex)
+    public int IndexOf(KbString token, int startIndex)
     {
         this.NullGuard(nameof(token), token);
 
-        if (token == string.Empty)
+        if (token == Empty)
         {
             // Set theory denotes the empty set as a member of the set.  Established convention in major languages.
             return startIndex;
@@ -229,12 +229,12 @@ public class KbString
     /// 
     /// Time Complexity: Linear time O(n).
     /// </summary>
-    /// <param name="searchToken">A <see cref="string"/> to replace.</param>
-    /// <param name="replaceToken">A <see cref="string"/> to substitute for the searchToken.</param>
-    /// <returns>A <see cref="string"/> with the first instance of the provided search token replaced
+    /// <param name="searchToken">A <see cref="KbString"/> to replace.</param>
+    /// <param name="replaceToken">A <see cref="KbString"/> to substitute for the searchToken.</param>
+    /// <returns>A <see cref="KbString"/> with the first instance of the provided search token replaced
     /// by the provided replaceToken.
     /// </returns>
-    public KbString ReplaceFirst(string searchToken, string replaceToken)
+    public KbString ReplaceFirst(KbString searchToken, KbString replaceToken)
     {
         this.NullGuard(nameof(searchToken), searchToken);
         this.NullGuard(nameof(replaceToken), replaceToken);
@@ -293,11 +293,11 @@ public class KbString
     /// Returns a new <see cref="String"/> with all occurrences of the provided search token replaced by the provided
     /// replace token.
     /// </summary>
-    /// <param name="searchToken">A <see cref="string"/> to replace.</param>
-    /// <param name="replaceToken">A <see cref="string"/> to substitute for the searchToken.</param>
-    /// <returns>A <see cref="string"/> with all instances of the provided search token replaced
+    /// <param name="searchToken">A <see cref="KbString"/> to replace.</param>
+    /// <param name="replaceToken">A <see cref="KbString"/> to substitute for the searchToken.</param>
+    /// <returns>A <see cref="KbString"/> with all instances of the provided search token replaced
     /// by the provided replaceToken.
-    public string Replace(string searchToken, string replaceToken)
+    public string Replace(KbString searchToken, KbString replaceToken)
     {
         this.NullGuard(nameof(searchToken), searchToken);
         this.NullGuard(nameof(replaceToken), replaceToken);
@@ -330,7 +330,8 @@ public class KbString
         // There may be remaining characters after the last match.
         if(copyIndex < this.characters.Length)
         {
-            result += new string(this.Substring(copyIndex, this.characters.Length - copyIndex));
+            // TODO: Need to implement shorthand concatenation operator and convert method to KbString.
+            result += new string(this.Substring(copyIndex, this.characters.Length - copyIndex).ToString());
         }
 
         return result;
@@ -482,7 +483,7 @@ public class KbString
 
     public static bool operator !=(KbString a, KbString b)
     {
-        return a.Equals(b);
+        return !a.Equals(b);
     }
 
     #endregion
