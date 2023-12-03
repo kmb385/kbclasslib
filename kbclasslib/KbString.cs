@@ -35,7 +35,7 @@ public class KbString
     /// <exception cref="ArgumentException">Thrown when value is null.</exception>
     public KbString(string value)
     {
-        this.NullGuard(nameof(value), value);
+        NullGuard(nameof(value), value);
 
         this.characters = value.ToCharArray();
     }
@@ -47,7 +47,7 @@ public class KbString
     /// <exception cref="ArgumentException">Thrown when characters is null.
     public KbString(char[] characters)
     {
-        this.NullGuard(nameof(characters), characters);
+        NullGuard(nameof(characters), characters);
 
         this.characters = characters;
     }
@@ -181,7 +181,7 @@ public class KbString
     /// the value -1 is returned</returns>
     public int IndexOf(KbString token, int startIndex)
     {
-        this.NullGuard(nameof(token), token);
+        NullGuard(nameof(token), token);
 
         if (token == Empty)
         {
@@ -236,8 +236,8 @@ public class KbString
     /// </returns>
     public KbString ReplaceFirst(KbString searchToken, KbString replaceToken)
     {
-        this.NullGuard(nameof(searchToken), searchToken);
-        this.NullGuard(nameof(replaceToken), replaceToken);
+        NullGuard(nameof(searchToken), searchToken);
+        NullGuard(nameof(replaceToken), replaceToken);
 
         // Attempt to find first occurrence.
         int firstMatch = this.IndexOf(searchToken, 0);
@@ -299,8 +299,8 @@ public class KbString
     /// by the provided replaceToken.
     public string Replace(KbString searchToken, KbString replaceToken)
     {
-        this.NullGuard(nameof(searchToken), searchToken);
-        this.NullGuard(nameof(replaceToken), replaceToken);
+        NullGuard(nameof(searchToken), searchToken);
+        NullGuard(nameof(replaceToken), replaceToken);
 
         string result = string.Empty;
 
@@ -350,7 +350,7 @@ public class KbString
     /// the value -1 is returned</returns>
     public int LastIndexOf(string token, int startIndex)
     {
-        this.NullGuard(nameof(token), token);
+        NullGuard(nameof(token), token);
 
         if(startIndex < 0 || startIndex > this.characters.Length - 1)
         {
@@ -486,9 +486,33 @@ public class KbString
         return !a.Equals(b);
     }
 
+    public static KbString operator +(KbString a, KbString b)
+    {
+        NullGuard(nameof(a), a);
+        NullGuard(nameof(b), b);
+
+        char[] newChars = new char[a.Length + b.Length];
+
+        int ac = 0;
+
+        while(ac < a.Length)
+        {
+            newChars[ac] = a[ac++];
+        }
+
+        int bc = 0;
+
+        while(bc < b.Length)
+        {
+            newChars[ac++] = b[bc++];
+        }
+
+        return new KbString(newChars);
+    }
+
     #endregion
 
-    private void NullGuard(string parameterName, object parameterValue)
+    private static void NullGuard(string parameterName, object parameterValue)
     {
         if (parameterValue == null)
         {

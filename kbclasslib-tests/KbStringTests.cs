@@ -436,7 +436,7 @@ public class KbStringTests
     }
 
     /// <summary>
-    /// Tests for the equals method implementation.
+    /// Tests for the equals operator overload.
     /// </summary>
     [DataRow("a", null, false)]
     [DataRow("a", "a", true)]
@@ -452,12 +452,62 @@ public class KbStringTests
     [DataRow("abc", "abb", false)]
     [DataRow("abc", "", false)]
     [TestMethod]
-    public void ComparisonOperator_Succeeds(string source, string comparison, bool result)
+    public void EqualsOperator_Succeeds(string source, string comparison, bool result)
     {
         KbString kbSource = new KbString(source);
 
         KbString kbComparison = comparison is null ? null : new KbString(comparison);
 
         Assert.IsTrue((kbSource == kbComparison) == result);
+    }
+
+    /// <summary>
+    /// Tests for the not equals operator overload.
+    /// </summary>
+    [DataRow("a", null, false)]
+    [DataRow("a", "a", true)]
+    [DataRow("a", "b", false)]
+    [DataRow("aa", "aa", true)]
+    [DataRow("aa", "bb", false)]
+    [DataRow("aaa", "aaa", true)]
+    [DataRow("aba", "aba", true)]
+    [DataRow("aba", "aca", false)]
+    [DataRow("baa", "baa", true)]
+    [DataRow("baa", "baa", true)]
+    [DataRow("abc", "abc", true)]
+    [DataRow("abc", "abb", false)]
+    [DataRow("abc", "", false)]
+    [TestMethod]
+    public void NotEqualsOperator_Succeeds(string source, string comparison, bool result)
+    {
+        KbString kbSource = new KbString(source);
+
+        KbString kbComparison = comparison is null ? null : new KbString(comparison);
+
+        Assert.IsTrue((kbSource != kbComparison) == !result);
+    }
+
+    /// <summary>
+    /// Tests for the equals method implementation.
+    /// </summary>
+    [DataRow("a", "a")]
+    [DataRow("a", "b")]
+    [DataRow("aa", "aa")]
+    [DataRow("aa", "bb")]
+    [DataRow("aaa", "aaa")]
+    [DataRow("aba", "aba")]
+    [DataRow("aba", "aca")]
+    [DataRow("baa", "baa")]
+    [DataRow("baa", "baa")]
+    [DataRow("abc", "abc")]
+    [DataRow("abc", "abb")]
+    [DataRow("abc", "")]
+    [TestMethod]
+    public void AdditionOperator_Succeeds(string source, string source2)
+    {
+        KbString kbSource = new KbString(source);
+        KbString kbSource2 = new KbString(source2);
+
+        Assert.AreEqual(new KbString(source + source2), kbSource + kbSource2);
     }
 }
