@@ -1,10 +1,14 @@
 ﻿namespace KbClassLib;
 
 /// <summary>
-/// An implementation of a string created by Kevin Bowersox.
-/// 
+/// A limited string implementation created by Kevin Bowersox.
+///
 /// "I am not concerned that you have fallen, I am concerned that you arise." - Abraham Lincoln
+///
+/// Supported Methods/Operators: Addition, Comparison, Contains, Equals, Indexer, IndexOf, LastIndexOf, Replace, ReplaceFirst, Split, StartsWith
 /// 
+/// Popular methods currently not supported: Clone, Compare, CompareTo, Concat, EndsWith, Format, HashCode, Insert, IsNullOrXXX, Join, Pad, Remove, ToUpper/Lower, Trim.
+///
 /// </summary>
 public class KbString
 {
@@ -297,12 +301,12 @@ public class KbString
     /// <param name="replaceToken">A <see cref="KbString"/> to substitute for the searchToken.</param>
     /// <returns>A <see cref="KbString"/> with all instances of the provided search token replaced
     /// by the provided replaceToken.
-    public string Replace(KbString searchToken, KbString replaceToken)
+    public KbString Replace(KbString searchToken, KbString replaceToken)
     {
         NullGuard(nameof(searchToken), searchToken);
         NullGuard(nameof(replaceToken), replaceToken);
 
-        string result = string.Empty;
+        KbString result = Empty;
 
         // Cursor to track the last position copied from source to result.
         int copyIndex = 0;
@@ -330,8 +334,7 @@ public class KbString
         // There may be remaining characters after the last match.
         if(copyIndex < this.characters.Length)
         {
-            // TODO: Need to implement shorthand concatenation operator and convert method to KbString.
-            result += new string(this.Substring(copyIndex, this.characters.Length - copyIndex).ToString());
+            result += this.Substring(copyIndex, this.characters.Length - copyIndex);
         }
 
         return result;

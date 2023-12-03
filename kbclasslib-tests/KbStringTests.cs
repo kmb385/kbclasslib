@@ -391,8 +391,9 @@ public class KbStringTests
         KbString kbSource = new KbString(source);
         KbString kbSearchToken= new KbString(searchToken);
         KbString kbReplaceToken= new KbString(replaceToken);
+        KbString kbExpectedResult = new KbString(expectedResult);
 
-        Assert.AreEqual(expectedResult, kbSource.Replace(kbSearchToken, kbReplaceToken));
+        Assert.AreEqual(kbExpectedResult, kbSource.Replace(kbSearchToken, kbReplaceToken));
     }
 
     /// <summary>
