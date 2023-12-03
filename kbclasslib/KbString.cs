@@ -3,8 +3,6 @@
 /// <summary>
 /// A limited string implementation created by Kevin Bowersox.
 ///
-/// "I am not concerned that you have fallen, I am concerned that you arise." - Abraham Lincoln
-///
 /// Supported Methods/Operators: Addition, Comparison, Contains, Equals, Indexer, IndexOf, LastIndexOf, Replace, ReplaceFirst, Split, StartsWith
 /// 
 /// Popular methods currently not supported: Clone, Compare, CompareTo, Concat, EndsWith, Format, HashCode, Insert, IsNullOrXXX, Join, Pad, Remove, ToUpper/Lower, Trim.
