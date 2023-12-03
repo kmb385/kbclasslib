@@ -287,7 +287,8 @@ public class KbStringTests
     public void ReplaceFirst_Succeeds(string source, string searchToken, string replaceToken, string expectedResult)
     {
         KbString kbSource = new KbString(source);
-        Assert.AreEqual(expectedResult, kbSource.ReplaceFirst(searchToken, replaceToken));
+        KbString kbExpectedResult = new KbString(expectedResult);
+        Assert.AreEqual(kbExpectedResult, kbSource.ReplaceFirst(searchToken, replaceToken));
     }
 
     /// <summary>

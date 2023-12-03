@@ -224,7 +224,7 @@ public class KbString
     /// <returns>A <see cref="string"/> with the first instance of the provided search token replaced
     /// by the provided replaceToken.
     /// </returns>
-    public string ReplaceFirst(string searchToken, string replaceToken)
+    public KbString ReplaceFirst(string searchToken, string replaceToken)
     {
         this.NullGuard(nameof(searchToken), searchToken);
         this.NullGuard(nameof(replaceToken), replaceToken);
@@ -235,7 +235,7 @@ public class KbString
         // Short circuit when no search token is present in string.
         if (firstMatch == IndexNotFound)
         {
-            return new string(this.characters);
+            return new KbString(this.characters);
         }
 
         /*
@@ -276,7 +276,7 @@ public class KbString
             resultCharacters[resultIndex++] = this.characters[sourceIndex++];
         }
 
-        return new string(resultCharacters);
+        return new KbString(resultCharacters);
     }
 
     /// <summary>
@@ -291,35 +291,6 @@ public class KbString
     {
         this.NullGuard(nameof(searchToken), searchToken);
         this.NullGuard(nameof(replaceToken), replaceToken);
-
-        /*
-         * "My cat is a bengal cat.".Replace("cat", "feline") => "My feline is a bengal feline." 
-         * 
-         *  Solution 1: "Replace Next Strategy"
-         *  1. Loop while search string is not found in string.
-         *  2. When found, replace the search string with the target string.
-         *  3. Eventually all occurrences are replaced or loop ends.
-         *  Note:  Similar to a Find/Replace capability in a text editor, where you can hit "Replace Next (not exact analogy)".
-         *  Note:  Implemenation has poor time commplexity.  Outer loop is O(n) * O(n) IndexOf/ReplaceFirst invocations = Quadratic Time (N^2)
-         *  Note:  Strategy needs to accumulate replaced string segments to avoid bugs where matches create additional matches. 
-         *  
-         *  Solution 2:
-         *  1. Use a list to store the result.
-         *  2. Split on the provided search string.
-         *  3. Join with the replace token. 
-         * 
-         * Solution 3:
-         * 1. First pass to find the occurrences and their indexes.
-         * 2. Drop out if no occurrences. Otherwise proceed. 
-         * 3. Calculate the length of the new string (similar to replace first)
-         * 4. Loop through source before each occurrence, track position with cursor (sourceCursor)
-         * 5. Loop through each occurrence, calculate the start/end, update (replaceCursor)
-         * 6. Update sourceCursor to account for copied characters.
-         * 7. Loop through remaning source (if necessary), and append to results. 
-         * Note: Lots of duplication with first strategy. 
-        */
-
-        // Implementation: Solution 1 Replace Next
 
         string result = string.Empty;
 
