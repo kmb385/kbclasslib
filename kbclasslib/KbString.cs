@@ -24,6 +24,11 @@ public class KbString
     private readonly char[] characters;
 
     /// <summary>
+    /// Empty string constant for readability and ease of use.
+    /// </summary>
+    public static readonly KbString Empty = new KbString("");
+
+    /// <summary>
     /// Constructor for <see cref="KbString"/> that accepts a <see cref="string"/> value.
     /// </summary>
     /// <param name="value">A <see cref="string"/> value to create the <see cref="KbString"/> from.</param>
@@ -46,6 +51,11 @@ public class KbString
 
         this.characters = characters;
     }
+
+    /// <summary>
+    /// Return the length of the <see cref="KbString"/>
+    /// </summary>
+    public int Length => this.characters.Length;
 
     /// <summary>
     /// Returns true if the provided target <see cref="string"/> is found within this <see cref="string"/>.
@@ -462,6 +472,20 @@ public class KbString
     {
         return new string(this.characters);
     }
+
+    #region operator overloads
+
+    public static bool operator ==(KbString a, KbString b)
+    {
+        return a.Equals(b);
+    }
+
+    public static bool operator !=(KbString a, KbString b)
+    {
+        return a.Equals(b);
+    }
+
+    #endregion
 
     private void NullGuard(string parameterName, object parameterValue)
     {
