@@ -30,10 +30,7 @@ public class KbString
     /// <exception cref="ArgumentException">Thrown when value is null.</exception>
     public KbString(string value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        this.NullGuard(nameof(value), value);
 
         this.characters = value.ToCharArray();
     }
@@ -45,10 +42,7 @@ public class KbString
     /// <exception cref="ArgumentException">Thrown when characters is null.
     public KbString(char[] characters)
     {
-        if (characters == null)
-        {
-            throw new ArgumentNullException(nameof(characters));
-        }
+        this.NullGuard(nameof(characters), characters);
 
         this.characters = characters;
     }
@@ -117,7 +111,7 @@ public class KbString
     /// <returns>An <see cref="Array"/> of <see cref="string"/>.</returns>
     public string[] Split(string delimiter)
     {
-        if (string.IsNullOrWhiteSpace(delimiter))
+        if (string.IsNullOrEmpty(delimiter))
         {
             throw new ArgumentException(nameof(delimiter));
         }
@@ -175,10 +169,7 @@ public class KbString
     /// the value -1 is returned</returns>
     public int IndexOf(string token, int startIndex)
     {
-        if (token == null)
-        {
-            throw new ArgumentNullException(nameof(token));
-        }
+        this.NullGuard(nameof(token), token);
 
         if (token == string.Empty)
         {
@@ -233,15 +224,8 @@ public class KbString
     /// </returns>
     public string ReplaceFirst(string searchToken, string replaceToken)
     {
-        if (searchToken == null)
-        {
-            throw new ArgumentNullException(nameof(searchToken));
-        }
-
-        if (replaceToken == null)
-        {
-            throw new ArgumentNullException(nameof(replaceToken));
-        }
+        this.NullGuard(nameof(searchToken), searchToken);
+        this.NullGuard(nameof(replaceToken), replaceToken);
 
         // Attempt to find first occurrence.
         int firstMatch = this.IndexOf(searchToken, 0);
@@ -303,8 +287,8 @@ public class KbString
     /// by the provided replaceToken.
     public string Replace(string searchToken, string replaceToken)
     {
-        this.NullGuard(searchToken, nameof(searchToken));
-        this.NullGuard(replaceToken, nameof(replaceToken));
+        this.NullGuard(nameof(searchToken), searchToken);
+        this.NullGuard(nameof(replaceToken), replaceToken);
 
         /*
          * "My cat is a bengal cat.".Replace("cat", "feline") => "My feline is a bengal feline." 
@@ -381,7 +365,7 @@ public class KbString
     /// the value -1 is returned</returns>
     public int LastIndexOf(string token, int startIndex)
     {
-        this.NullGuard(token, nameof(token));
+        this.NullGuard(nameof(token), token);
 
         if(startIndex < 0 || startIndex > this.characters.Length - 1)
         {
@@ -433,12 +417,11 @@ public class KbString
         return IndexNotFound;
     }
 
-private void NullGuard(string parameterName, string parameterValue)
-{
-    // TODO: Replace explicit guard logic with helper in a refactor. 
-    if (parameterValue == null)
+    private void NullGuard(string parameterName, object parameterValue)
     {
-        throw new ArgumentNullException(parameterName);
+        if (parameterValue == null)
+        {
+            throw new ArgumentNullException(parameterName);
+        }
     }
-}
 }
