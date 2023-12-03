@@ -70,6 +70,7 @@ public class KbString
     /// <summary>
     /// Returns a <see cref="string"/> representing a subsequence of this <see cref="KbString"/> starting at the provided
     /// index with the specified length.
+    /// Implementation has linear time complexity O(n)
     /// </summary>
     /// <param name="start">An <see cref="int"/> representing a zero-based index to begin the subsequence.</param>
     /// <param name="length">An <see cref="int"/> representing the length of the subsequence.</param>
@@ -125,6 +126,7 @@ public class KbString
         // Only tokenize from tokens 0...N-1.
         while (sourceIndex <= sourceLength - delimiter.Length)
         {
+            // Substring Invocation is linear time, effectively making this a nested loop, so overall its quadratic.  TODO: Research if Perf/Refactor is possible
             if (delimiter != this.Substring(sourceIndex, delimiter.Length))
             {
                 sourceIndex++;
@@ -215,7 +217,7 @@ public class KbString
     /// Returns a new <see cref="KbString"/> with the first instance of the provided search token replaced
     /// by the provided replaceToken.
     /// 
-    /// Time Complexity: Constant time O(n).
+    /// Time Complexity: Linear time O(n).
     /// </summary>
     /// <param name="searchToken">A <see cref="string"/> to replace.</param>
     /// <param name="replaceToken">A <see cref="string"/> to substitute for the searchToken.</param>
@@ -299,7 +301,7 @@ public class KbString
          *  3. Eventually all occurrences are replaced or loop ends.
          *  Note:  Similar to a Find/Replace capability in a text editor, where you can hit "Replace Next (not exact analogy)".
          *  Note:  Implemenation has poor time commplexity.  Outer loop is O(n) * O(n) IndexOf/ReplaceFirst invocations = Quadratic Time (N^2)
-         *  Note:  Strategy needs to be executed from the end of the string to avoid bugs where matches create additional matches. 
+         *  Note:  Strategy needs to accumulate replaced string segments to avoid bugs where matches create additional matches. 
          *  
          *  Solution 2:
          *  1. Use a list to store the result.
@@ -314,6 +316,7 @@ public class KbString
          * 5. Loop through each occurrence, calculate the start/end, update (replaceCursor)
          * 6. Update sourceCursor to account for copied characters.
          * 7. Loop through remaning source (if necessary), and append to results. 
+         * Note: Lots of duplication with first strategy. 
         */
 
         // Implementation: Solution 1 Replace Next
@@ -415,6 +418,78 @@ public class KbString
         }
 
         return IndexNotFound;
+    }
+
+    public char this[int index]
+    {
+        get
+        {
+            if(index < 0 || index >= this.characters.Length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            return this.characters[index];
+        }
+
+        set
+        {
+            if(index < 0 || index >= this.characters.Length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            this.characters[index] = value;
+        }
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj)
+    {
+        if(obj == null)
+        {
+            return false;
+        }
+
+        if(this == null)
+        {
+            return false;
+        }
+
+        if(obj is not KbString)
+        {
+            return false;
+        }
+
+        KbString objKbString = obj as KbString;
+
+        if(objKbString.characters.Length != this.characters.Length)
+        {
+            return false;
+        }
+
+        for(int x = 0; x < this.characters.Length; x++)
+        {
+            if (objKbString[x] != this.characters[x])
+            {
+                return false;
+            }
+        }
+
+        return true; 
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        // TODO: Implementation
+        return base.GetHashCode();
+    }
+
+    /// <inheritdoc/>
+    public override string? ToString()
+    {
+        return new string(this.characters);
     }
 
     private void NullGuard(string parameterName, object parameterValue)
