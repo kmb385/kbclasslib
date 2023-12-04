@@ -516,6 +516,12 @@ public class KbStringTests
     [DataRow("a", "a")]
     [DataRow("a", "b")]
     [DataRow("a", "b")]
+    [DataRow("aa", "ab")]
+    [DataRow("aa", "aab")]
+    [DataRow("aab", "aa")]
+    [DataRow("aab ", "aa")]
+    [DataRow("aab", "aa ")]
+    [DataRow("aab", "aa ")]
     public void Compare_Succeeds(string source, string comparison)
     {
         KbString kbSource = new KbString(source);
@@ -534,8 +540,8 @@ public class KbStringTests
     [DataRow("", null)]
     public void Compare_Throw(string source, string comparison)
     {
-        KbString kbSource = new KbString(source);
-        KbString kbComparison = new KbString(comparison);
+        KbString kbSource = source == null ? null : new KbString(source);
+        KbString kbComparison = source == null ? null : new KbString(comparison);
 
         Assert.ThrowsException<ArgumentNullException>(() => KbString.Compare(kbSource, kbComparison));
     }

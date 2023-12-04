@@ -62,13 +62,48 @@ public class KbString
     /// <summary>
     /// Compares the two provided <see cref="KbString"/> instances for order.
     /// </summary>
-    /// <param name="kbSource">The first instance of <see cref="KbString"/> to compare.</param>
-    /// <param name="kbComparison">The second instance of <see cref="KbString"/> to compare.</param>
+    /// <param name="object1">The first instance of <see cref="KbString"/> to compare.</param>
+    /// <param name="object2">The second instance of <see cref="KbString"/> to compare.</param>
     /// <returns>An integer representing if the first argument is less than (-1), equalt to (0), or great than (1) the
     /// second argument.</returns>
-    public static int Compare(KbString? kbSource, KbString? kbComparison)
+    public static int Compare(KbString object1, KbString object2)
     {
-        throw new NotImplementedException();
+        NullGuard(nameof(object1), object1);
+        NullGuard(nameof(object2), object2);
+
+        // Short circuit for same value.
+        if(object1 == object2)
+        {
+            return 0;
+        }
+
+        int object1Index = 0;
+        int object2Index = 0;
+
+        // Seek the first diff between the values or exhaustion of a value;
+        while (
+            object1Index < object1.Length &&
+            object2Index < object2.Length &&
+            object1[object1Index] == object2[object2Index])
+        {
+            object1Index++;
+            object2Index++;
+        }
+
+        // Diff found prior to exhaustion. Potentially at last position of both values, but not exhausted.
+        if(object1Index <= object1.Length - 1 && object2Index <= object2.Length - 1)
+        {
+            if (object1[object1Index] == object2[object2Index])
+            {
+                return 0;
+            }
+
+            // CompareTo contract does not guarantee 1, 0 or -1.  Only greater than 0, less than 0. Standardizing for dev ex.
+            return object1[object1Index].CompareTo(object2[object2Index]) > 0 ? 1 : -1;
+        }
+
+        // One of the values exhausted, meaning all characters matched until this point.  Subtract indexes to position shortest first.
+        return object1.Length - object2.Length > 0 ? 1 : -1;
     }
 
     /// <summary>
