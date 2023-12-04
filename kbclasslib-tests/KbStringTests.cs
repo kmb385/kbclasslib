@@ -525,4 +525,18 @@ public class KbStringTests
             String.Compare(source, comparison),
             KbString.Compare(kbSource, kbComparison));
     }
+
+    /// <summary>
+    /// Tests for the Compare method implementation where an exceptional condition is encountered.
+    /// </summary>
+    [TestMethod]
+    [DataRow(null, "")]
+    [DataRow("", null)]
+    public void Compare_Throw(string source, string comparison)
+    {
+        KbString kbSource = new KbString(source);
+        KbString kbComparison = new KbString(comparison);
+
+        Assert.ThrowsException<ArgumentNullException>(() => KbString.Compare(kbSource, kbComparison));
+    }
 }
