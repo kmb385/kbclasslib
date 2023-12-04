@@ -491,6 +491,7 @@ public class KbStringTests
     /// <summary>
     /// Tests for the equals method implementation.
     /// </summary>
+    [TestMethod]
     [DataRow("a", "a")]
     [DataRow("a", "b")]
     [DataRow("aa", "aa")]
@@ -499,16 +500,29 @@ public class KbStringTests
     [DataRow("aba", "aba")]
     [DataRow("aba", "aca")]
     [DataRow("baa", "baa")]
-    [DataRow("baa", "baa")]
     [DataRow("abc", "abc")]
     [DataRow("abc", "abb")]
     [DataRow("abc", "")]
-    [TestMethod]
     public void AdditionOperator_Succeeds(string source, string source2)
     {
         KbString kbSource = new KbString(source);
         KbString kbSource2 = new KbString(source2);
 
         Assert.AreEqual(new KbString(source + source2), kbSource + kbSource2);
+    }
+
+    [TestMethod]
+    [DataRow("", "")]
+    [DataRow("a", "a")]
+    [DataRow("a", "b")]
+    [DataRow("a", "b")]
+    public void Compare_Succeeds(string source, string comparison)
+    {
+        KbString kbSource = new KbString(source);
+        KbString kbComparison = new KbString(comparison);
+
+        Assert.AreEqual(
+            String.Compare(source, comparison),
+            KbString.Compare(kbSource, kbComparison));
     }
 }

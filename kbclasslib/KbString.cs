@@ -60,6 +60,18 @@ public class KbString
     public int Length => this.characters.Length;
 
     /// <summary>
+    /// Compares the two provided <see cref="KbString"/> instances for order.
+    /// </summary>
+    /// <param name="kbSource">The first instance of <see cref="KbString"/> to compare.</param>
+    /// <param name="kbComparison">The second instance of <see cref="KbString"/> to compare.</param>
+    /// <returns>An integer representing if the first argument is less than (-1), equalt to (0), or great than (1) the
+    /// second argument.</returns>
+    public static int Compare(KbString? kbSource, KbString? kbComparison)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
     /// Returns true if the provided target <see cref="Kbstring"/> is found within this <see cref="KbString"/>.
     /// </summary>
     /// <param name="target">A target <see cref="KbString"/> to search for.</param>
