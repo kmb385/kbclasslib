@@ -545,4 +545,28 @@ public class KbStringTests
 
         Assert.ThrowsException<ArgumentNullException>(() => KbString.Compare(kbSource, kbComparison));
     }
+
+    [TestMethod]
+    [DataRow("",   0, "a", "a")]
+    [DataRow("ac", 1, "b", "abc")]
+    [DataRow("a",  1, "b", "ab")]
+    public void Insert_Succeeds(string source, int position, string insertionSource, string expectedResult)
+    {
+        KbString kbSource = new KbString(source);
+        KbString kbInsertionSource = new KbString(insertionSource);
+        KbString kbExpectedResult = new KbString(expectedResult);
+
+        Assert.AreEqual(kbExpectedResult, kbSource.Insert(position, kbInsertionSource));
+    }
+
+    [TestMethod]
+    [DataRow("",   0, null, "a")]
+    public void Insert_Throw(string source, int position, string insertionSource, string expectedResult)
+    {
+        KbString kbSource = new KbString(source);
+        KbString kbInsertionSource = insertionSource == null ? null : new KbString(insertionSource);
+        KbString kbExpectedResult = new KbString(expectedResult);
+
+        Assert.ThrowsException<ArgumentNullException>(() => kbSource.Insert(position, kbInsertionSource));
+    }
 }

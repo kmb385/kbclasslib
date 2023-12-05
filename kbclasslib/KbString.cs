@@ -465,6 +465,17 @@ public class KbString
         return IndexNotFound;
     }
 
+    /// <summary>
+    /// Inserts the provided <see cref="KbString"/> value into this <see cref="KbString"/> at the provided start index.
+    /// </summary>
+    /// <param name="startIndex">The index at which the insertion should begin.</param>
+    /// <param name="value">The value to be inserted.</param>
+    /// <returns>A new <see cref="KbString"/> with the provided <see cref="KbString"/> value inserted at the specified index.</returns>
+    public KbString Insert(int startIndex, KbString value)
+    {
+        throw new NotImplementedException();
+    }
+
     public char this[int index]
     {
         get
