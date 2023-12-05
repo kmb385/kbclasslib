@@ -228,7 +228,7 @@ public class KbStringTests
     public void Split_InvalidParameters_Throw(string source, string delimiter)
     {
         KbString kbSource = new KbString(source);
-        KbString kbDelimiter = new KbString(delimiter);
+        KbString kbDelimiter = delimiter == null ? null : new KbString(delimiter);
         Assert.ThrowsException<ArgumentException>(() => kbSource.Split(kbDelimiter));
     }
 
@@ -541,7 +541,7 @@ public class KbStringTests
     public void Compare_Throw(string source, string comparison)
     {
         KbString kbSource = source == null ? null : new KbString(source);
-        KbString kbComparison = source == null ? null : new KbString(comparison);
+        KbString kbComparison = comparison == null ? null : new KbString(comparison);
 
         Assert.ThrowsException<ArgumentNullException>(() => KbString.Compare(kbSource, kbComparison));
     }
