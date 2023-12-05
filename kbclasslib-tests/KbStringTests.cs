@@ -547,9 +547,14 @@ public class KbStringTests
     }
 
     [TestMethod]
-    [DataRow("",   0, "a", "a")]
-    [DataRow("ac", 1, "b", "abc")]
-    [DataRow("a",  1, "b", "ab")]
+    [DataRow("",   0,  "a", "a")]
+    [DataRow("b",  0,  "a", "ab")]
+    [DataRow("b",  0,  "aa", "aab")]
+    [DataRow("a",  1,  "b", "ab")]
+    [DataRow("ac", 1,  "b", "abc")]
+    [DataRow("aa",  1, "bb", "abba")]
+    [DataRow("ab",  2, "c", "abc")]
+    [DataRow("ab",  2, "cc", "abcc")]
     public void Insert_Succeeds(string source, int position, string insertionSource, string expectedResult)
     {
         KbString kbSource = new KbString(source);
@@ -560,13 +565,24 @@ public class KbStringTests
     }
 
     [TestMethod]
-    [DataRow("",   0, null, "a")]
-    public void Insert_Throw(string source, int position, string insertionSource, string expectedResult)
+    [DataRow("", 0, null, "a")]
+    public void Insert_NullReference_Throw(string source, int position, string insertionSource, string expectedResult)
     {
         KbString kbSource = new KbString(source);
         KbString kbInsertionSource = insertionSource == null ? null : new KbString(insertionSource);
         KbString kbExpectedResult = new KbString(expectedResult);
 
         Assert.ThrowsException<ArgumentNullException>(() => kbSource.Insert(position, kbInsertionSource));
+    }
+
+    [TestMethod]
+    [DataRow("", -1, "a", "a")]
+    public void Insert_IndexOutofBounds_Throw(string source, int position, string insertionSource, string expectedResult)
+    {
+        KbString kbSource = new KbString(source);
+        KbString kbInsertionSource = insertionSource == null ? null : new KbString(insertionSource);
+        KbString kbExpectedResult = new KbString(expectedResult);
+
+        Assert.ThrowsException<IndexOutOfRangeException>(() => kbSource.Insert(position, kbInsertionSource));
     }
 }

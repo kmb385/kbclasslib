@@ -28,7 +28,7 @@ public class KbString
     /// <summary>
     /// Compare equal constant for readability.
     /// </summary>
-    private const int Equal = 1;
+    private const int Equal = 0;
 
     /// <summary>
     /// First Character Index constant for readability.
@@ -151,6 +151,7 @@ public class KbString
     /// <returns>A <see cref="KbString"/> subsequence starting at the provided index of the provided length.</returns>
     public KbString Substring(int start, int length)
     {
+        // TODO: Add bounds guard here and tests.
         if (start < 0 || this.characters.Length < start)
         {
             throw new ArgumentException(nameof(start));
@@ -415,6 +416,7 @@ public class KbString
     {
         NullGuard(nameof(token), token);
 
+        // TODO: Add Bounds Guard and tests
         if(startIndex < 0 || startIndex > this.characters.Length - 1)
         {
             throw new ArgumentException(nameof(startIndex));
@@ -473,7 +475,32 @@ public class KbString
     /// <returns>A new <see cref="KbString"/> with the provided <see cref="KbString"/> value inserted at the specified index.</returns>
     public KbString Insert(int startIndex, KbString value)
     {
-        throw new NotImplementedException();
+        NullGuard(nameof(value), value);
+        BoundsGuard(nameof(startIndex), startIndex);
+
+        char[] result = new char[this.characters.Length + value.Length];
+        int exclusiveEndIndex = startIndex + value.Length;
+
+        int sourceIndex = 0;
+        int valueIndex = 0;
+
+        // Iterate once per character in the result
+        for (int insertionIndex = 0; insertionIndex < result.Length; insertionIndex++)
+        {
+            // If current index is within the bounds of insertion space, insert new chars.
+            if (startIndex <= insertionIndex && insertionIndex < exclusiveEndIndex)
+            {
+                result[insertionIndex] = value[valueIndex++];
+                continue;
+            }
+            else
+            {
+                // Otherwise insert from the source.
+                result[insertionIndex] = this.characters[sourceIndex++];
+            }
+        }
+
+        return new KbString(result);
     }
 
     public char this[int index]
@@ -591,6 +618,14 @@ public class KbString
         if (parameterValue == null)
         {
             throw new ArgumentNullException(parameterName);
+        }
+    }
+
+    private void BoundsGuard(string parameterName, int value, int max = Int32.MaxValue)
+    {
+        if(0 > value && value > max)
+        {
+            throw new IndexOutOfRangeException($"{parameterName} is out of range.");
         }
     }
 }
