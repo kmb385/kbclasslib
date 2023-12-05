@@ -3,9 +3,9 @@
 /// <summary>
 /// A limited string implementation created by Kevin Bowersox.
 ///
-/// Supported Methods/Operators: Addition, Comparison, Contains, Equals, Indexer, IndexOf, LastIndexOf, Replace, ReplaceFirst, Split, StartsWith
+/// Supported Methods/Operators: Addition, Comparison, Compare Contains, Equals, Indexer, IndexOf, LastIndexOf, Replace, ReplaceFirst, Split, StartsWith
 /// 
-/// Popular methods currently not supported: Clone, Compare, CompareTo, Concat, EndsWith, Format, HashCode, Insert, IsNullOrXXX, Join, Pad, Remove, ToUpper/Lower, Trim.
+/// Popular methods currently not supported: Clone, CompareTo, Concat, EndsWith, Format, HashCode, Insert, IsNullOrXXX, Join, Pad, Remove, ToUpper/Lower, Trim.
 ///
 /// </summary>
 public class KbString
@@ -14,6 +14,21 @@ public class KbString
     /// Index of not found constant for readability.
     /// </summary>
     private const int IndexNotFound = -1;
+ 
+    /// <summary>
+    /// Compare greater than constant for readability.
+    /// </summary>
+    private const int GreaterThan = 1;
+
+    /// <summary>
+    /// Compare less than constant for readability.
+    /// </summary>
+    private const int LessThan = -1;
+
+    /// <summary>
+    /// Compare equal constant for readability.
+    /// </summary>
+    private const int Equal = 1;
 
     /// <summary>
     /// First Character Index constant for readability.
@@ -74,7 +89,7 @@ public class KbString
         // Short circuit for same value.
         if(object1 == object2)
         {
-            return 0;
+            return Equal;
         }
 
         int object1Index = 0;
@@ -95,7 +110,7 @@ public class KbString
         {
             if (object1[object1Index] == object2[object2Index])
             {
-                return 0;
+                return Equal;
             }
 
             // CompareTo contract does not guarantee 1, 0 or -1.  Only greater than 0, less than 0. Standardizing for dev ex.
@@ -103,7 +118,7 @@ public class KbString
         }
 
         // One of the values exhausted, meaning all characters matched until this point.  Subtract indexes to position shortest first.
-        return object1.Length - object2.Length > 0 ? 1 : -1;
+        return object1.Length - object2.Length > 0 ? GreaterThan : LessThan;
     }
 
     /// <summary>
