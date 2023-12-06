@@ -440,6 +440,7 @@ public class KbStringTests
     /// Tests for the equals operator overload.
     /// </summary>
     [DataRow("a", null, false)]
+    [DataRow(null, "a", false)]
     [DataRow("a", "a", true)]
     [DataRow("a", "b", false)]
     [DataRow("aa", "aa", true)]
@@ -455,9 +456,9 @@ public class KbStringTests
     [TestMethod]
     public void EqualsOperator_Succeeds(string source, string comparison, bool result)
     {
-        KbString kbSource = new KbString(source);
+        KbString kbSource = source == null ? null : new KbString(source);
 
-        KbString kbComparison = comparison is null ? null : new KbString(comparison);
+        KbString kbComparison = comparison == null ? null : new KbString(comparison);
 
         Assert.IsTrue((kbSource == kbComparison) == result);
     }

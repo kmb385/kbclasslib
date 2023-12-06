@@ -579,11 +579,32 @@ public class KbString
 
     public static bool operator ==(KbString a, KbString b)
     {
+        // Need to convert to object to avoid recursing into operator implementation.
+        if (((object)a) == null && ((object)b) == null)
+        {
+            return true;
+        }
+
+        if (((object)a) == null || ((object)b) == null)
+        {
+            return false;
+        }
+
         return a.Equals(b);
     }
 
     public static bool operator !=(KbString a, KbString b)
     {
+        if(a == null && b == null)
+        {
+            return true;
+        }
+
+        if(a == null || b == null)
+        {
+            return false;
+        }    
+
         return !a.Equals(b);
     }
 
