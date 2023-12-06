@@ -597,12 +597,12 @@ public class KbString
     {
         if(a == null && b == null)
         {
-            return true;
+            return false;
         }
 
         if(a == null || b == null)
         {
-            return false;
+            return true;
         }    
 
         return !a.Equals(b);
