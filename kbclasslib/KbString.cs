@@ -526,7 +526,6 @@ public class KbString
         }
     }
 
-    /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
         if(obj == null)
@@ -562,14 +561,12 @@ public class KbString
         return true; 
     }
 
-    /// <inheritdoc/>
     public override int GetHashCode()
     {
         // TODO: Implementation
         return base.GetHashCode();
     }
 
-    /// <inheritdoc/>
     public override string? ToString()
     {
         return new string(this.characters);
